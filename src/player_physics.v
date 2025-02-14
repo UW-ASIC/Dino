@@ -7,7 +7,7 @@ module player_physics #(
   parameter FASTDROP_VELOCITY     =  6,
 ) (
   input clk,
-  input reset,
+  input reset_n,
   input [1:0] game_tick, // enable for the FF that stores result of velocity [0] and position [1]
   input jump_pulse,      // high for one clock cycle at start of jump (set initial velocity)
   input button_down,     // high if down button is pressed
@@ -29,7 +29,7 @@ module player_physics #(
   assign adder_res = adder_in1 + adder_in2;
 
   always @ (posedge clk) begin
-    if (reset) begin
+    if (!reset_n) begin
       velocity <= '0;
       position <= '0; // Replace with ground position
     end else begin

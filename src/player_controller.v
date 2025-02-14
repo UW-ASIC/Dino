@@ -2,7 +2,7 @@
 
 module player_controller (
   input clk,
-  input reset,
+  input reset_n,
   input [1:0] game_tick,
   input button_up,
   input button_down,
@@ -26,7 +26,7 @@ module player_controller (
   reg [2:0] game_state;
 
   always @(posedge(clk)) begin
-    if (reset) begin
+    if (!reset_n) begin
       current_state <= RESTART;
     end else begin
       case (current_state)
@@ -60,7 +60,7 @@ module player_controller (
 
   player_physics u_player_physics (
     .clk(clk),
-    .reset(reset),
+    .reset_n(reset_n),
     .game_tick(game_tick),
     .jump_pulse(jump_pulse),
     .button_down(button_down),
