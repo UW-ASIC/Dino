@@ -7,12 +7,12 @@ module player_controller (
   input button_up,
   input button_down,
   input crash,
-  output reg [7:0] player_position,
-  output reg game_start_pulse,
-  output reg game_over_pulse,
-  output reg jump_pulse,
-  output reg jumping,
-  output reg ducking,
+  output [5:0] player_position,
+  output game_start_pulse,
+  output game_over_pulse,
+  output jump_pulse,
+  output jumping,
+  output ducking
 );
 
   localparam RESTART    = 3'b000;
@@ -27,11 +27,11 @@ module player_controller (
 
   always @(posedge(clk)) begin
     if (!reset_n) begin
-      current_state <= RESTART;
+      game_state <= RESTART;
     end else begin
-      case (current_state)
+      case (game_state)
         RESTART: begin
-          else if (game_tick[0] &&  button_up  ) game_state <= JUMPING;
+          if      (game_tick[0] &&  button_up  ) game_state <= JUMPING;
           else                                   game_state <= RESTART;
         end
         JUMPING: begin
@@ -54,6 +54,7 @@ module player_controller (
           if      (game_tick[0] &&  button_up  ) game_state <= RUNNING;
           else                                   game_state <= GAME_OVER;
         end
+        default: game_state <= RESTART;
       endcase
     end
   end
@@ -65,7 +66,7 @@ module player_controller (
     .jump_pulse(jump_pulse),
     .button_down(button_down),
     .jump_done(jump_done),
-    .position(position),
+    .position(player_position)
   );
 
   assign game_start_pulse = (game_state == RESTART   && game_tick[0] && button_up);

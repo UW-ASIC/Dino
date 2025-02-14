@@ -4,15 +4,15 @@ module player_physics #(
   // determined from pygame example
   parameter INITIAL_JUMP_VELOCITY = -7,
   parameter DOWNWARD_ACCELERATION =  1,
-  parameter FASTDROP_VELOCITY     =  6,
+  parameter FASTDROP_VELOCITY     =  6
 ) (
   input clk,
   input reset_n,
-  input [1:0] game_tick, // enable for the FF that stores result of velocity [0] and position [1]
-  input jump_pulse,      // high for one clock cycle at start of jump (set initial velocity)
-  input button_down,     // high if down button is pressed
+  input [1:0] game_tick,     // enable for the FF that stores result of velocity [0] and position [1]
+  input jump_pulse,          // high for one clock cycle at start of jump (set initial velocity)
+  input button_down,         // high if down button is pressed
   output reg [5:0] position, // -21..4
-  output wire jump_done, // not(msb of adder) -- only sampled when game_tick[1] == 1
+  output wire jump_done      // not(msb of adder) -- only sampled when game_tick[1] == 1
 );
 
   reg  [3:0] velocity; // -7..6
@@ -25,30 +25,30 @@ module player_physics #(
 
   // game_tick[1] == 0 means calculating velocity, game_tick[1] == 1 means calculating position
   assign adder_in1 = (game_tick[1]) ? active_vel : DOWNWARD_ACCELERATION;
-  assign adder_in2 = (game_tick[1]) ? position : velocity;
-  assign adder_res = adder_in1 + adder_in2;
+  assign adder_in2 = (game_tick[1]) ? position : { 2'b00, velocity };
+  assign adder_res = { 2'b00, adder_in1 } + adder_in2;
 
   always @ (posedge clk) begin
     if (!reset_n) begin
-      velocity <= '0;
-      position <= '0; // Replace with ground position
+      velocity <= 0;
+      position <= 0; // Replace with ground position
     end else begin
       if (game_tick[0]) begin
-        if      (button_down)               velocity <= '0;
-        else if (jump_pulse)                velocity <= INITIAL_JUMP_VELOCITY;
-        else if (position[$high(position)]) velocity <= adder_res;
+        if      (button_down) velocity <= 0;
+        else if (jump_pulse)  velocity <= INITIAL_JUMP_VELOCITY;
+        else if (position[5]) velocity <= adder_res[3:0];
       end else if (game_tick[1]) begin
-        if (~adder_res[$high(adder_res)]) begin
-          velocity <= '0;
-          position <= '0;
+        if (~adder_res[5]) begin
+          velocity <= 0;
+          position <= 0;
         end else begin
-          velocity <= adder_res;
+          position <= adder_res;
         end
       end
     end
   end
 
   // Only sampled when game_tick[1] == 1, so jump_done == 1 when calculated position overflows
-  assign jump_done = ~adder_res[$high(adder_res)];
+  assign jump_done = ~adder_res[5];
 
 endmodule
