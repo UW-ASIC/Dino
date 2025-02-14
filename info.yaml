@@ -3,7 +3,7 @@ project:
   title:        "UW ASIC - Optimized Dino"      # Project title
   author:       "University of Waterloo ASIC Design Team"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "Dino game, but only 1 tile!"      # One line description of what your project does
+  description:  "Dino game, but only 2 tiles!"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
 
