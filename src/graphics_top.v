@@ -48,8 +48,8 @@ module graphics_top #(parameter CONV = 0)(
     end
 
     always @(*) begin
-       o_hsync = hsync_r;
-       o_vsync = vsync_r;
+       o_hsync = hsync;
+       o_vsync = vsync;
     end
 
     always @(*) begin
@@ -82,9 +82,9 @@ module graphics_top #(parameter CONV = 0)(
         o_green = 2'b00;
 
         // DEBUG remove after
-        if (~display_on_r) begin
-          o_blue = 2'b00;
-          o_red = 2'b11;
+        if (~display_on) begin
+          o_blue = 2'b11;
+          o_red = 2'b00;
           o_green = 2'b10;
         end else if (is_colored_r) begin
             o_blue = 2'b11;
