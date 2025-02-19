@@ -21,7 +21,7 @@ project:
     - "dino_render.v"
     - "dino_rom.v"
     - "graphics_top.v"
-    - "hsync_generator.v"
+    - "hvsync_generator.v"
     - "lfsr.v"
     - "obs_render.v"
     - "obs_rom.v"
