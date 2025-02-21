@@ -2,7 +2,7 @@
 
 module player_controller (
   input clk,
-  input reset_n,
+  input rst_n,
   input [1:0] game_tick,
   input button_up,
   input button_down,
@@ -15,18 +15,18 @@ module player_controller (
   output ducking
 );
 
-  localparam RESTART    = 3'b000;
-  localparam JUMPING    = 3'b001;
-  localparam RUNNING    = 3'b010;
-  localparam DUCKING    = 3'b011;
-  localparam GAME_OVER  = 3'b100;
+  localparam RESTART   = 3'b000;
+  localparam JUMPING   = 3'b001;
+  localparam RUNNING   = 3'b010;
+  localparam DUCKING   = 3'b011;
+  localparam GAME_OVER = 3'b100;
 
   wire jump_done;
 
   reg [2:0] game_state;
 
   always @(posedge(clk)) begin
-    if (!reset_n) begin
+    if (!rst_n) begin
       game_state <= RESTART;
     end else begin
       case (game_state)
@@ -61,7 +61,7 @@ module player_controller (
 
   player_physics u_player_physics (
     .clk(clk),
-    .reset_n(reset_n),
+    .rst_n(rst_n),
     .game_tick(game_tick),
     .jump_pulse(jump_pulse),
     .button_down(button_down),
