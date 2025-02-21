@@ -16,6 +16,24 @@ module tt_um_uwasic_dinogame (
     input  wire       rst_n     // reset_n - low to reset
 );
 
+
+  wire [8:0] obstacle1_pos;
+  wire [8:0] obstacle2_pos;
+  wire [2:0] obstacle1_type;
+  wire [2:0] obstacle2_type;
+  wire [7:0] rng;
+  wire gametick;
+  obstacles #(.GEN_LINE(250)) obstacles_inst (
+      .clk(gametick),
+      .rst_n(rst_n),
+      .rng(rng),
+      .obstacle1_pos(obstacle1_pos),
+      .obstacle2_pos(obstacle2_pos),
+      .obstacle1_type(obstacle1_type),
+      .obstacle2_type(obstacle2_type)
+  );
+
+
   // All output pins must be assigned. If not used, assign to 0.
   assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
   assign uio_out = 0;
