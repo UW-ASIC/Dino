@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2025 UW ASIC
  * SPDX-License-Identifier: Apache-2.0
  */
 
 `default_nettype none 
  
-module tt_um_uwasic_dinogame (
+module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -23,28 +23,29 @@ module tt_um_uwasic_dinogame (
     // List all unused inputs to prevent warnings
     wire _unused = &{ena, clk, rst_n, 1'b0};
 
+    wire       vpos_5;
     wire       game_tick_60hz;
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
 
-    wire debounce_count_en; // pulse on rising edge of 5th vpos bit
+    wire debounce_countdown_en; // pulse on rising edge of 5th vpos bit
     wire button_up;
     wire button_down;
 
-    button_debounce button_up_debounce (
-        .clk(clk),
-        .rst_n(rst_n),
-        .countdown_en(debounce_countdown_en),
-        .button_in(ui_in[0]),
-        .button_out(button_up)
-    );
+// button_debounce button_up_debounce (
+//     .clk(clk),
+//     .rst_n(rst_n),
+//     .countdown_en(debounce_countdown_en),
+//     .button_in(ui_in[0]),
+//     .button_out(button_up)
+// );
 
-    button_debounce button_down_debounce (
-      .clk(clk),
-      .rst_n(rst_n),
-      .countdown_en(debounce_countdown_en),
-      .button_in(ui_in[1]),
-      .button_out(button_down)
-    );
+//  button_debounce button_down_debounce (
+//    .clk(clk),
+//    .rst_n(rst_n),
+//    .countdown_en(debounce_countdown_en),
+//    .button_in(ui_in[1]),
+//    .button_out(button_down)
+//  );
 
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
@@ -107,15 +108,58 @@ module tt_um_uwasic_dinogame (
     dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .o_sprite_color(dino_color));
     obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
   
-    score_render #(.CONV(CONV)) score_inst (.clk(clk), .rst(~rst_n), .num(), .i_hpos(hpos), .i_vpos(vpos), .o_score_color(score_color));
-    dino_render #(.CONV(CONV)) dino_inst  (.clk(clk), .rst(~rst_n), .i_hpos(hpos), .i_vpos(vpos), .o_color_dino(color_dino), .o_rom_counter(dino_rom_counter), .i_sprite_color(dino_color));
-    obs_render #(.CONV(CONV)) obs_inst  (.clk(clk), .rst(~rst_n), .i_hpos(hpos), .i_vpos(vpos), .o_color_obs(color_obs), .o_rom_counter(obs_rom_counter), .i_sprite_color(obs_color));
+
+
+    score_render #(.CONV(CONV)) score_inst (
+        .clk(clk),
+        .rst(~rst_n),
+        .num(3),
+        .i_hpos(hpos),
+        .i_vpos(vpos),
+        .o_score_color(score_color)
+    );
+    dino_render #(.CONV(CONV)) dino_inst  (
+        .clk(clk),
+        .rst(~rst_n),
+        .i_hpos(hpos),
+        .i_vpos(vpos),
+        .o_color_dino(color_dino),
+        .o_rom_counter(dino_rom_counter),
+        .i_sprite_color(dino_color),
+        .i_ypos(player_position)
+    );
+    obs_render #(.CONV(CONV)) obs_inst  (
+        .clk(clk),
+        .rst(~rst_n),
+        .i_hpos(hpos),
+        .i_vpos(vpos),
+        .o_color_obs(color_obs),
+        .o_rom_counter(obs_rom_counter),
+        .i_sprite_color(obs_color),
+        .i_obs_type(obstacle1_type),
+        .i_xpos(obstacle1_pos)
+    );
   
-    graphics_top #(.CONV(CONV)) graphics_inst  (.clk(clk), .reset(~rst_n), .o_hsync(hsync), .o_vsync(vsync), 
-    .o_blue(B), .o_green(G), .o_red(R), 
-    .i_color_background(1'b0), .i_color_obstacle(color_obs),
-    .i_color_player(color_dino), .i_color_score(score_color),
-    .o_hpos(hpos), .o_vpos(vpos));
+    graphics_top #(.CONV(CONV)) graphics_inst  (
+        .clk(clk),
+        .rst(~rst_n),
+        .o_hsync(hsync),
+        .o_vsync(vsync), 
+        .o_blue(B),
+        .o_green(G),
+        .o_red(R), 
+        .i_color_background(1'b0),
+        .i_color_obstacle(color_obs),
+        .i_color_player(color_dino),
+        .i_color_score(score_color),
+        .o_hpos(hpos),
+        .o_vpos(vpos),
+        .o_game_tick_60hz(game_tick_60hz),
+        .o_game_tick_20hz(game_tick_20hz[0]),
+        .o_game_tick_20hz_r(game_tick_20hz[1]),
+        .o_vpos_5_r(vpos_5),
+        .o_collision(crash)
+    );
   
     // TinyVGA PMOD
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
