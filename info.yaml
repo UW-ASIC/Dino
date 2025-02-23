@@ -29,7 +29,6 @@ project:
     - "player_controller.v"
     - "player_physics.v"
     - "project.v"
-    - "render_top.v"
     - "score.v"
     - "score_render.v"
 
