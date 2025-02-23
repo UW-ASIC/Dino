@@ -77,89 +77,89 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .ducking(ducking)
     );
 
-    obstacles #(.GEN_LINE(250)) obstacles_inst (
-        .clk(game_tick_60hz),
-        .rst_n(rst_n),
-        .rng(rng),
-        .obstacle1_pos(obstacle1_pos),
-        .obstacle2_pos(obstacle2_pos),
-        .obstacle1_type(obstacle1_type),
-        .obstacle2_type(obstacle2_type)
-    );
+    // obstacles #(.GEN_LINE(250)) obstacles_inst (
+    //     .clk(game_tick_60hz),
+    //     .rst_n(rst_n),
+    //     .rng(rng),
+    //     .obstacle1_pos(obstacle1_pos),
+    //     .obstacle2_pos(obstacle2_pos),
+    //     .obstacle1_type(obstacle1_type),
+    //     .obstacle2_type(obstacle2_type)
+    // );
 
-    // VGA signals
-    wire hsync;
-    wire vsync;
-    wire [1:0] R;
-    wire [1:0] G;
-    wire [1:0] B;
+    // // VGA signals
+    // wire hsync;
+    // wire vsync;
+    // wire [1:0] R;
+    // wire [1:0] G;
+    // wire [1:0] B;
   
-    // graphics/rendering signals
-    wire [9:CONV] hpos;
-    wire [9:CONV] vpos;
-    wire color_dino;
-    wire color_obs;
-    wire obs_color;
-    wire dino_color;
-    wire score_color;
-    wire [5:0] dino_rom_counter;
-    wire [2:0] obs_rom_counter;
+    // // graphics/rendering signals
+    // wire [9:CONV] hpos;
+    // wire [9:CONV] vpos;
+    // wire color_dino;
+    // wire color_obs;
+    // wire obs_color;
+    // wire dino_color;
+    // wire score_color;
+    // wire [5:0] dino_rom_counter;
+    // wire [2:0] obs_rom_counter;
  
-    dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .o_sprite_color(dino_color));
-    obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
+    // dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .o_sprite_color(dino_color));
+    // obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
   
 
 
-    score_render #(.CONV(CONV)) score_inst (
-        .clk(clk),
-        .rst(~rst_n),
-        .num(3),
-        .i_hpos(hpos),
-        .i_vpos(vpos),
-        .o_score_color(score_color)
-    );
-    dino_render #(.CONV(CONV)) dino_inst  (
-        .clk(clk),
-        .rst(~rst_n),
-        .i_hpos(hpos),
-        .i_vpos(vpos),
-        .o_color_dino(color_dino),
-        .o_rom_counter(dino_rom_counter),
-        .i_sprite_color(dino_color),
-        .i_ypos(player_position)
-    );
-    obs_render #(.CONV(CONV)) obs_inst  (
-        .clk(clk),
-        .rst(~rst_n),
-        .i_hpos(hpos),
-        .i_vpos(vpos),
-        .o_color_obs(color_obs),
-        .o_rom_counter(obs_rom_counter),
-        .i_sprite_color(obs_color),
-        .i_obs_type(obstacle1_type),
-        .i_xpos(obstacle1_pos)
-    );
+    // score_render #(.CONV(CONV)) score_inst (
+    //     .clk(clk),
+    //     .rst(~rst_n),
+    //     .num(3),
+    //     .i_hpos(hpos),
+    //     .i_vpos(vpos),
+    //     .o_score_color(score_color)
+    // );
+    // dino_render #(.CONV(CONV)) dino_inst  (
+    //     .clk(clk),
+    //     .rst(~rst_n),
+    //     .i_hpos(hpos),
+    //     .i_vpos(vpos),
+    //     .o_color_dino(color_dino),
+    //     .o_rom_counter(dino_rom_counter),
+    //     .i_sprite_color(dino_color),
+    //     .i_ypos(player_position)
+    // );
+    // obs_render #(.CONV(CONV)) obs_inst  (
+    //     .clk(clk),
+    //     .rst(~rst_n),
+    //     .i_hpos(hpos),
+    //     .i_vpos(vpos),
+    //     .o_color_obs(color_obs),
+    //     .o_rom_counter(obs_rom_counter),
+    //     .i_sprite_color(obs_color),
+    //     .i_obs_type(obstacle1_type),
+    //     .i_xpos(obstacle1_pos)
+    // );
   
-    graphics_top #(.CONV(CONV)) graphics_inst  (
-        .clk(clk),
-        .rst(~rst_n),
-        .o_hsync(hsync),
-        .o_vsync(vsync), 
-        .o_blue(B),
-        .o_green(G),
-        .o_red(R), 
-        .i_color_background(1'b0),
-        .i_color_obstacle(color_obs),
-        .i_color_player(color_dino),
-        .i_color_score(score_color),
-        .o_hpos(hpos),
-        .o_vpos(vpos),
-        .o_game_tick_60hz(game_tick_60hz),
-        .o_game_tick_20hz(game_tick_20hz[0]),
-        .o_game_tick_20hz_r(game_tick_20hz[1]),
-        .o_vpos_5_r(vpos_5),
-        .o_collision(crash)
-    );
+    // graphics_top #(.CONV(CONV)) graphics_inst  (
+    //     .clk(clk),
+    //     .rst(~rst_n),
+    //     .o_hsync(hsync),
+    //     .o_vsync(vsync), 
+    //     .o_blue(B),
+    //     .o_green(G),
+    //     .o_red(R), 
+    //     .i_color_background(1'b0),
+    //     .i_color_obstacle(color_obs),
+    //     .i_color_player(color_dino),
+    //     .i_color_score(score_color),
+    //     .o_hpos(hpos),
+    //     .o_vpos(vpos),
+    //     .o_game_tick_60hz(game_tick_60hz),
+    //     .o_game_tick_20hz(game_tick_20hz[0]),
+    //     .o_game_tick_20hz_r(game_tick_20hz[1]),
+    //     .o_vpos_5_r(vpos_5),
+    //     .o_collision(crash)
+    // );
   
     // TinyVGA PMOD
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
