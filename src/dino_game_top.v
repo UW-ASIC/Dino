@@ -77,15 +77,15 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     //     .ducking(ducking)
     // );
 
-    // obstacles #(.GEN_LINE(250)) obstacles_inst (
-    //     .clk(game_tick_60hz),
-    //     .rst_n(rst_n),
-    //     .rng(rng),
-    //     .obstacle1_pos(obstacle1_pos),
-    //     .obstacle2_pos(obstacle2_pos),
-    //     .obstacle1_type(obstacle1_type),
-    //     .obstacle2_type(obstacle2_type)
-    // );
+    obstacles #(.GEN_LINE(250)) obstacles_inst (
+        .clk(game_tick_60hz),
+        .rst_n(rst_n),
+        .rng(rng),
+        .obstacle1_pos(obstacle1_pos),
+        .obstacle2_pos(obstacle2_pos),
+        .obstacle1_type(obstacle1_type),
+        .obstacle2_type(obstacle2_type)
+    );
 
     // VGA signals
     wire hsync;
