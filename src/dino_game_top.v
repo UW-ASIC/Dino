@@ -125,7 +125,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .i_sprite_color(dino_color),
         .i_ypos(player_position)
     );
-    obs_render #(.CONV(CONV)) obs_inst  (
+    obs_render #(.CONV(CONV)) obs_inst_1  (
         .clk(clk),
         .rst(~rst_n),
         .i_hpos(hpos),
@@ -136,7 +136,19 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .i_obs_type(obstacle1_type),
         .i_xpos(obstacle1_pos)
     );
-  
+
+    obs_render #(.CONV(CONV)) obs_inst_2  (
+        .clk(clk),
+        .rst(~rst_n),
+        .i_hpos(hpos),
+        .i_vpos(vpos),
+        .o_color_obs(color_obs),
+        .o_rom_counter(obs_rom_counter),
+        .i_sprite_color(obs_color),
+        .i_obs_type(obstacle2_type),
+        .i_xpos(obstacle2_pos)
+    );
+
     graphics_top #(.CONV(CONV)) graphics_inst  (
         .clk(clk),
         .rst(~rst_n),
