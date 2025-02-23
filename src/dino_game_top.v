@@ -105,7 +105,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .o_sprite_color(dino_color));
     obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
   
-
+    // score wires
+    wire score;
 
     score_render #(.CONV(CONV)) score_inst (
         .clk(clk),
@@ -156,6 +157,15 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .o_game_tick_20hz_r(game_tick_20hz[1]),
         .o_vpos_5_r(vpos_5),
         .o_collision(crash)
+    );
+
+    ScoreModule score_module_inst (
+        .game_start(game_start_pulse),     
+        .game_over(game_over_pulse),      
+        .game_tick(game_tick_60hz),     
+        .clk(clk),            // clock
+        .rst_n(rst_n),          // reset_n - low to reset
+        .score(score)    
     );
   
     // TinyVGA PMOD
