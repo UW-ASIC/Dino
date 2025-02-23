@@ -67,7 +67,7 @@ module game_over_sound_player (
             end
 
             PLAY2: begin
-                if (stage_index == 15)
+                if (stage_index == 31)
                     next_state = DONE;
                 else
                     next_state = PLAY2;
@@ -101,16 +101,16 @@ module game_over_sound_player (
                 end
 
                 PLAY1: begin
-                    if ( counter < decay_value) begin
-                        counter <= counter + 1;
-                    end else begin
+                    if ( counter >= decay_value) begin
                         wave_out <= 0;  // Toggle waveform
-                    end
+                    end 
 
                     if (counter >= PERIOD) begin  // Once we complete a full cycle
                             wave_out    <= 1;
                             counter     <= 0;
                             stage_index <= stage_index + 1;
+                    end else begin
+                        counter <= counter + 1;
                     end
 
                     // Use the distinct localparams instead of array lookup
@@ -135,16 +135,16 @@ module game_over_sound_player (
                 end
 
                 PLAY2: begin
-                    if ( counter < decay_value) begin
-                        counter <= counter + 1;
-                    end else begin
+                    if ( counter >= decay_value) begin
                         wave_out <= 0;  // Toggle waveform
-                    end
+                    end 
 
                     if (counter >= PERIOD) begin  // Once we complete a full cycle
                             wave_out    <= 1;
                             counter     <= 0;
                             stage_index <= stage_index + 1;
+                    end else begin
+                        counter <= counter + 1;
                     end
 
                     // Use the distinct localparams instead of array lookup
