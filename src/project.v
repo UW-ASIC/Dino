@@ -6,7 +6,7 @@
 `default_nettype none 
  
 module tt_um_uwasic_dinogame (
-    input  wire [7:0] ui_in,    // Dedicated inputs
+    input  wire [7:0] ui_in,    // Dedicated inputs: 4-6 are gamepad
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
     output wire [7:0] uio_out,  // IOs: Output path
@@ -30,20 +30,44 @@ module tt_um_uwasic_dinogame (
     wire button_up;
     wire button_down;
 
-    button_debounce button_up_debounce (
+    // Gamepad Pmod support
+    wire gamepad_pmod_latch = ui_in[4];
+    wire gamepad_pmod_clk = ui_in[5];
+    wire gamepad_pmod_data = ui_in[6];
+    wire gamepad_is_present;  // HIGH when gamepad is connected
+    wire gamepad_left; 
+    wire gamepad_right;
+    wire gamepad_up;
+    wire gamepad_down;
+    wire gamepad_start;   // Can leverage start, select from SNES
+    wire gamepad_select;
+
+    // Synchronizes pmod_data, pmod_clk, pmod_latch signals to system clock
+    // domain.
+    gamepad_pmod_single gamepad_pmod (
+        // Inputs:
         .clk(clk),
         .rst_n(rst_n),
-        .countdown_en(debounce_countdown_en),
-        .button_in(ui_in[0]),
-        .button_out(button_up)
-    );
+        .pmod_latch(gamepad_pmod_latch),
+        .pmod_clk(gamepad_pmod_clk),
+        .pmod_data(gamepad_pmod_data),
 
-    button_debounce button_down_debounce (
-      .clk(clk),
-      .rst_n(rst_n),
-      .countdown_en(debounce_countdown_en),
-      .button_in(ui_in[1]),
-      .button_out(button_down)
+        // Outputs:
+        .is_present(gamepad_is_present),
+        .left(gamepad_left),
+        .right(gamepad_right),
+        .up(gamepad_up),
+        .down(gamepad_down),
+        .start(gamepad_start),
+        .select(gamepad_select),
+
+        // unused outputs
+        .a(),
+        .b(),
+        .x(),
+        .y(),
+        .l(),
+        .r()
     );
 
     // GAME STATE SIGNALS
@@ -65,8 +89,8 @@ module tt_um_uwasic_dinogame (
         .clk(clk),
         .rst_n(rst_n),
         .game_tick(game_tick_20hz),
-        .button_up(button_up),
-        .button_down(button_down),
+        .button_up(gamepad_up),
+        .button_down(gamepad_down),
         .crash(crash),
         .player_position(player_position),
         .game_start_pulse(game_start_pulse),
