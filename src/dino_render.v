@@ -1,6 +1,6 @@
 `default_nettype none
 
-module dino_layer #(parameter CONV = 0) (
+module dino_render #(parameter CONV = 0) (
   input  wire       clk,      // clock
   input  wire       rst, 
 
@@ -11,7 +11,10 @@ module dino_layer #(parameter CONV = 0) (
 
   // ROM
   output reg [5:0] o_rom_counter,
-  input wire  i_sprite_color
+  input wire  i_sprite_color,
+
+  // Player
+  input wire [5:0] i_ypos
 );
 
   reg [9:CONV] y_offset;
@@ -31,7 +34,7 @@ module dino_layer #(parameter CONV = 0) (
   end 
 
   always @(*) begin
-    y_offset = i_vpos - 9;
+    y_offset = i_vpos - i_ypos;
     x_offset = i_hpos - 6;
     in_sprite = (x_offset_r < 8) && (y_offset_r < 8);
   end 

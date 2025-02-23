@@ -11,7 +11,11 @@ module obs_render #(parameter CONV = 0) (
 
   // ROM
   output reg [2:0] o_rom_counter,
-  input wire  i_sprite_color
+  input wire  i_sprite_color,
+
+  // Obstacle
+  input wire [2:0] i_obs_type,
+  input wire [8:0] i_xpos
 );
 
   reg [9:CONV] y_offset;
@@ -19,8 +23,8 @@ module obs_render #(parameter CONV = 0) (
   reg in_sprite;
 
   always @(*) begin
-    y_offset = i_vpos - 13;
-    x_offset = i_hpos - 18;
+    y_offset = i_vpos - 30;
+    x_offset = i_hpos - i_xpos[8:CONV-1];
     in_sprite = (x_offset < 2) && (y_offset < 4);
   end 
 
