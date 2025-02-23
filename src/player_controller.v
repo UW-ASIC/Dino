@@ -35,23 +35,23 @@ module player_controller (
           else                                   game_state <= RESTART;
         end
         JUMPING: begin
-          if      (game_tick[0] &&  crash      ) game_state <= GAME_OVER;
+          if      (  crash  )                    game_state <= GAME_OVER;
           else if (game_tick[1] &&  jump_done  ) game_state <= RUNNING;
           else                                   game_state <= JUMPING;
         end
         RUNNING: begin
-          if      (game_tick[0] &&  crash      ) game_state <= GAME_OVER;
+          if      (  crash  )                    game_state <= GAME_OVER;
           else if (game_tick[0] &&  button_down) game_state <= DUCKING;
           else if (game_tick[0] &&  button_up  ) game_state <= JUMPING;
           else                                   game_state <= RUNNING;
         end
         DUCKING: begin
-          if      (game_tick[0] &&  crash      ) game_state <= GAME_OVER;
+          if      (  crash  )                    game_state <= GAME_OVER;
           else if (game_tick[0] && !button_down) game_state <= RUNNING;
           else                                   game_state <= DUCKING;
         end
         GAME_OVER: begin
-          if      (game_tick[0] &&  button_up  ) game_state <= RUNNING;
+          if      (game_tick[0] &&  button_up  ) game_state <= RUNNING; // TODO: can switch game restart to another button instead of button up
           else                                   game_state <= GAME_OVER;
         end
         default: game_state <= RESTART;
