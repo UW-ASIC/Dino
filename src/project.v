@@ -17,7 +17,6 @@ module tt_um_uwasic_dinogame (
 );
 
     // All output pins must be assigned. If not used, assign to 0.
-    assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
     assign uio_out = 0;
     assign uio_oe  = 0;
 
@@ -86,5 +85,39 @@ module tt_um_uwasic_dinogame (
         .obstacle1_type(obstacle1_type),
         .obstacle2_type(obstacle2_type)
     );
+
+    // VGA signals
+    wire hsync;
+    wire vsync;
+    wire [1:0] R;
+    wire [1:0] G;
+    wire [1:0] B;
+  
+    // graphics/rendering signals
+    wire [9:CONV] hpos;
+    wire [9:CONV] vpos;
+    wire color_dino;
+    wire color_obs;
+    wire obs_color;
+    wire dino_color;
+    wire score_color;
+    wire [5:0] dino_rom_counter;
+    wire [2:0] obs_rom_counter;
+ 
+    dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .o_sprite_color(dino_color));
+    obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
+  
+    score_render #(.CONV(CONV)) score_inst (.clk(clk), .rst(~rst_n), .num(), .i_hpos(hpos), .i_vpos(vpos), .o_score_color(score_color));
+    dino_render #(.CONV(CONV)) dino_inst  (.clk(clk), .rst(~rst_n), .i_hpos(hpos), .i_vpos(vpos), .o_color_dino(color_dino), .o_rom_counter(dino_rom_counter), .i_sprite_color(dino_color));
+    obs_render #(.CONV(CONV)) obs_inst  (.clk(clk), .rst(~rst_n), .i_hpos(hpos), .i_vpos(vpos), .o_color_obs(color_obs), .o_rom_counter(obs_rom_counter), .i_sprite_color(obs_color));
+  
+    graphics_top #(.CONV(CONV)) graphics_inst  (.clk(clk), .reset(~rst_n), .o_hsync(hsync), .o_vsync(vsync), 
+    .o_blue(B), .o_green(G), .o_red(R), 
+    .i_color_background(1'b0), .i_color_obstacle(color_obs),
+    .i_color_player(color_dino), .i_color_score(score_color),
+    .o_hpos(hpos), .o_vpos(vpos));
+  
+    // TinyVGA PMOD
+    assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
 
 endmodule
