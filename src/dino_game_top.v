@@ -16,13 +16,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-    // All output pins must be assigned. If not used, assign to 0.
-    assign uio_out = 0;
-    assign uio_oe  = 0;
-
-    // List all unused inputs to prevent warnings
-    wire _unused = &{ena, clk, rst_n, 1'b0};
-
     wire       game_tick_60hz;
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
 
@@ -37,14 +30,14 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .button_in(ui_in[0]),
         .button_out(button_up)
     );
-
-    button_debounce button_down_debounce (
-    .clk(clk),
-    .rst_n(rst_n),
-    .countdown_en(debounce_countdown_en),
-    .button_in(ui_in[1]),
-    .button_out(button_down)
-    );
+    
+     button_debounce button_down_debounce (
+       .clk(clk),
+       .rst_n(rst_n),
+       .countdown_en(debounce_countdown_en),
+       .button_in(ui_in[1]),
+       .button_out(button_down)
+     );
 
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
@@ -177,5 +170,12 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
   
     // TinyVGA PMOD
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
+
+    // All output pins must be assigned. If not used, assign to 0.
+    assign uio_out = 0;
+    assign uio_oe  = 0;
+
+    // List all unused inputs to prevent warnings
+    wire _unused = &{ena, ui_in[7:2], uio_in, 1'b0};
 
 endmodule
