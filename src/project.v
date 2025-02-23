@@ -8,9 +8,9 @@
 module tt_um_uwasic_dinogame (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
-    input  wire [7:0] uio_in,   // IOs: Input path
-    output wire [7:0] uio_out,  // IOs: Output path
-    output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
+    input  wire [7:8] uio_in,   // IOs: Input path
+    output wire [7:8] uio_out,  // IOs: Output path
+    output wire [7:8] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     input  wire       clk,      // clock
     input  wire       rst_n     // reset_n - low to reset
@@ -103,9 +103,12 @@ module tt_um_uwasic_dinogame (
     wire score_color;
     wire [5:0] dino_rom_counter;
     wire [2:0] obs_rom_counter;
+    wire [3:0] score_rom_address;
+    wire [9:0] score_rom_output;
  
     dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .o_sprite_color(dino_color));
     obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
+    score_rom score_rom_inst (.clk(clk), .rst(~rst_n), .address(score_rom_address), .data(score_rom_output));
   
     score_render #(.CONV(CONV)) score_inst (.clk(clk), .rst(~rst_n), .num(), .i_hpos(hpos), .i_vpos(vpos), .o_score_color(score_color));
     dino_render #(.CONV(CONV)) dino_inst  (.clk(clk), .rst(~rst_n), .i_hpos(hpos), .i_vpos(vpos), .o_color_dino(color_dino), .o_rom_counter(dino_rom_counter), .i_sprite_color(dino_color));
