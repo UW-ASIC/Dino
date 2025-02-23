@@ -1,6 +1,7 @@
 // See https://nandland.com/lfsr-linear-feedback-shift-register/
+`default_nettype none
 
-module LFSR
+module lfsr
   #(    parameter NUM_BITS = 8)
 (
   input wire clk,
@@ -30,6 +31,7 @@ module LFSR
       16: assign r_xnor = r_lfsr[16] ^~ r_lfsr[15] ^~ r_lfsr[13] ^~ r_lfsr[4];
     endcase // case (NUM_BITS)
   endgenerate
+
   always @(posedge clk) begin
     if (enable == 1'b1)
       r_lfsr <= {r_lfsr[NUM_BITS-1:1], r_xnor};
