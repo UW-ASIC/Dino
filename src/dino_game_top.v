@@ -62,20 +62,20 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     wire [2:0] obstacle2_type;
     wire [7:0] rng;
 
-    player_controller player_constroller_inst (
-        .clk(clk),
-        .rst_n(rst_n),
-        .game_tick(game_tick_20hz),
-        .button_up(button_up),
-        .button_down(button_down),
-        .crash(crash),
-        .player_position(player_position),
-        .game_start_pulse(game_start_pulse),
-        .game_over_pulse(game_over_pulse),
-        .jump_pulse(jump_pulse),
-        .jumping(jumping),
-        .ducking(ducking)
-    );
+    // player_controller player_constroller_inst (
+    //     .clk(clk),
+    //     .rst_n(rst_n),
+    //     .game_tick(game_tick_20hz),
+    //     .button_up(button_up),
+    //     .button_down(button_down),
+    //     .crash(crash),
+    //     .player_position(player_position),
+    //     .game_start_pulse(game_start_pulse),
+    //     .game_over_pulse(game_over_pulse),
+    //     .jump_pulse(jump_pulse),
+    //     .jumping(jumping),
+    //     .ducking(ducking)
+    // );
 
     // obstacles #(.GEN_LINE(250)) obstacles_inst (
     //     .clk(game_tick_60hz),
