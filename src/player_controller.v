@@ -42,13 +42,15 @@ module player_controller (
           if      (crash                       ) game_state <= GAME_OVER;
           else if (game_tick[0] &&  button_down) game_state <= DUCKING;
           else if (game_tick[0] &&  button_up  ) game_state <= JUMPING;
-          else                                   game_state <= RUNNING2;
+          else if (game_tick[0]                ) game_state <= RUNNING2;
+          else                                   game_state <= RUNNING1;
         end
         RUNNING2: begin
           if      (crash                       ) game_state <= GAME_OVER;
           else if (game_tick[0] &&  button_down) game_state <= DUCKING;
           else if (game_tick[0] &&  button_up  ) game_state <= JUMPING;
-          else                                   game_state <= RUNNING1;
+          else if (game_tick[0]                ) game_state <= RUNNING1;
+          else                                   game_state <= RUNNING2;
         end
         DUCKING: begin
           if      (crash                       ) game_state <= GAME_OVER;
