@@ -50,8 +50,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     wire game_start_pulse;
     wire game_over_pulse;
     wire jump_pulse;
-    wire jumping;
-    wire ducking;
+    wire [2:0] game_state;
 
     wire [8:0] obstacle1_pos;
     wire [8:0] obstacle2_pos;
@@ -70,8 +69,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .game_start_pulse(game_start_pulse),
         .game_over_pulse(game_over_pulse),
         .jump_pulse(jump_pulse),
-        .jumping(jumping),
-        .ducking(ducking)
+        .game_state(game_state)
     );
 
     obstacles #(.GEN_LINE(250)) obstacles_inst (

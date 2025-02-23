@@ -11,19 +11,18 @@ module player_controller (
   output game_start_pulse,
   output game_over_pulse,
   output jump_pulse,
-  output jumping,
-  output ducking
+  output reg [2:0] game_state
 );
 
   localparam RESTART   = 3'b000;
   localparam JUMPING   = 3'b001;
-  localparam RUNNING   = 3'b010;
-  localparam DUCKING   = 3'b011;
-  localparam GAME_OVER = 3'b100;
+  localparam RUNNING1  = 3'b010;
+  localparam RUNNING2  = 3'b011;
+  localparam DUCKING   = 3'b100;
+  localparam GAME_OVER = 3'b101;
 
+  wire running;
   wire jump_done;
-
-  reg [2:0] game_state;
 
   always @(posedge(clk)) begin
     if (!rst_n) begin
@@ -31,27 +30,33 @@ module player_controller (
     end else begin
       case (game_state)
         RESTART: begin
-          if      (game_tick[0] &&  button_up  ) game_state <= JUMPING;
+          if      (game_tick[0] &&  button_up  ) game_state <= JUMPING; // TODO: switch to RUNNING1 with "start" button?
           else                                   game_state <= RESTART;
         end
         JUMPING: begin
-          if      (  crash  )                    game_state <= GAME_OVER;
-          else if (game_tick[1] &&  jump_done  ) game_state <= RUNNING;
+          if      (crash                       ) game_state <= GAME_OVER;
+          else if (game_tick[1] &&  jump_done  ) game_state <= RUNNING1;
           else                                   game_state <= JUMPING;
         end
-        RUNNING: begin
-          if      (  crash  )                    game_state <= GAME_OVER;
+        RUNNING1: begin
+          if      (crash                       ) game_state <= GAME_OVER;
           else if (game_tick[0] &&  button_down) game_state <= DUCKING;
           else if (game_tick[0] &&  button_up  ) game_state <= JUMPING;
-          else                                   game_state <= RUNNING;
+          else                                   game_state <= RUNNING2;
+        end
+        RUNNING2: begin
+          if      (crash                       ) game_state <= GAME_OVER;
+          else if (game_tick[0] &&  button_down) game_state <= DUCKING;
+          else if (game_tick[0] &&  button_up  ) game_state <= JUMPING;
+          else                                   game_state <= RUNNING1;
         end
         DUCKING: begin
-          if      (  crash  )                    game_state <= GAME_OVER;
-          else if (game_tick[0] && !button_down) game_state <= RUNNING;
+          if      (crash                       ) game_state <= GAME_OVER;
+          else if (game_tick[0] && !button_down) game_state <= RUNNING1;
           else                                   game_state <= DUCKING;
         end
         GAME_OVER: begin
-          if      (game_tick[0] &&  button_up  ) game_state <= RUNNING; // TODO: can switch game restart to another button instead of button up
+          if      (game_tick[0] &&  button_up  ) game_state <= RUNNING1; // TODO: can switch game restart to another button instead of button up
           else                                   game_state <= GAME_OVER;
         end
         default: game_state <= RESTART;
@@ -69,11 +74,10 @@ module player_controller (
     .position(player_position)
   );
 
+  assign running = (game_state == RUNNING1 || game_state == RUNNING2);
+
   assign game_start_pulse = (game_state == RESTART   && game_tick[0] && button_up);
   assign game_over_pulse  = (game_state != GAME_OVER && game_tick[0] && button_up);
-  assign jump_pulse       = (game_state == RUNNING   && game_tick[0] && button_up);
-
-  assign jumping = (game_state == RUNNING);
-  assign ducking = (game_state == DUCKING);
+  assign jump_pulse       = (running                 && game_tick[0] && button_up);
 
 endmodule
