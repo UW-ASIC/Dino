@@ -18,6 +18,7 @@ project:
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
     - "debounce.v"
+    - "dino_game_top.v"
     - "dino_render.v"
     - "dino_rom.v"
     - "graphics_top.v"
@@ -28,7 +29,6 @@ project:
     - "obstacles.v"
     - "player_controller.v"
     - "player_physics.v"
-    - "project.v"
     - "score.v"
     - "score_render.v"
 
