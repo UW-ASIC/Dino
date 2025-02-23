@@ -19,24 +19,41 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire       game_tick_60hz;
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
 
-    wire debounce_countdown_en; // pulse on rising edge of 5th vpos bit
-    wire button_up; 
-    wire button_down; 
+    // Gamepad Pmod support
+    wire gamepad_pmod_latch = ui_in[4];
+    wire gamepad_pmod_clk = ui_in[5];
+    wire gamepad_pmod_data = ui_in[6];
+    wire gamepad_is_present;  // HIGH when gamepad is connected
+    wire gamepad_up;
+    wire gamepad_down;
+    wire gamepad_start;   // Can leverage start, select from SNES
 
-    button_debounce button_up_debounce (
+    // Synchronizes pmod_data, pmod_clk, pmod_latch signals to system clock
+    // domain.
+    gamepad_pmod_single gamepad_pmod (
+        // Inputs:
         .clk(clk),
         .rst_n(rst_n),
-        .countdown_en(debounce_countdown_en),
-        .button_in(ui_in[0]),
-        .button_out(button_up)
-    );
-    
-    button_debounce button_down_debounce (
-      .clk(clk),
-      .rst_n(rst_n),
-      .countdown_en(debounce_countdown_en),
-      .button_in(ui_in[1]),
-      .button_out(button_down)
+        .pmod_latch(gamepad_pmod_latch),
+        .pmod_clk(gamepad_pmod_clk),
+        .pmod_data(gamepad_pmod_data),
+
+        // Outputs:
+        .is_present(gamepad_is_present),
+        .up(gamepad_up),
+        .down(gamepad_down),
+        .start(gamepad_start),
+
+        // unused outputs
+        .left(),
+        .right(),
+        .select(),
+        .a(),
+        .b(),
+        .x(),
+        .y(),
+        .l(),
+        .r()
     );
 
     // GAME STATE SIGNALS
@@ -64,9 +81,9 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .clk(clk),
         .rst_n(rst_n),
         .game_tick(game_tick_20hz),
-        .button_start(button_up),
-        .button_up(button_up),
-        .button_down(button_down),
+        .button_start(gamepad_start),
+        .button_up(gamepad_up),
+        .button_down(gamepad_down),
         .crash(crash),
         .player_position(player_position),
         .game_start_pulse(game_start_pulse),
@@ -114,7 +131,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     obs_rom obs_rom_inst_2 (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter_2), .i_obs_type(obstacle2_type), .o_sprite_color(obs_color_2));
   
     wire [15:0] score;
-
+  
     score_render #(.CONV(CONV), .OFFSET(120)) score_inst_1 (
         .clk(clk),
         .rst(~rst_n),
@@ -123,7 +140,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .i_vpos(vpos),
         .o_score_color(score_color_1)
     );
-
+  
     score_render #(.CONV(CONV), .OFFSET(110)) score_inst_2 (
         .clk(clk),
         .rst(~rst_n),
@@ -229,6 +246,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     assign uio_oe  = 8'b10000000;
 
     // List all unused inputs to prevent warnings
-    wire _unused = &{ena, ui_in[7:2], uio_in, 1'b0};
+    wire _unused = &{ena, ui_in[7], ui_in[3:0], uio_in, 1'b0};
 
 endmodule
