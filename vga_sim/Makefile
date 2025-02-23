@@ -2,7 +2,8 @@
 ## (C)2023 Will Green, open source hardware released under the MIT License
 ## Learn more at https://projectf.io/posts/racing-the-beam/
 
-VFLAGS = -O3 --x-assign fast --x-initial fast --noassert -Wno-TIMESCALEMOD --top-module top_dino
+VFLAGS = -O3 --x-assign fast --x-initial fast --noassert -Wno-TIMESCALEMOD --public --vpi --top-module top_dino
+# -O3 --x-assign fast --x-initial fast --noassert -Wno-TIMESCALEMOD  --vpi
 SDL_CFLAGS = `sdl2-config --cflags`
 SDL_LDFLAGS = `sdl2-config --libs`
 SRC_FOLDER = -Isrc

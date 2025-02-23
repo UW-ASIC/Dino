@@ -15,7 +15,7 @@ module obs_render #(parameter CONV = 0) (
 
   // Obstacle
   input wire [2:0] i_obs_type,
-  input wire [8:0] i_xpos
+  input wire [8:CONV-1] i_xpos
 );
 
   reg [9:CONV] y_offset;
