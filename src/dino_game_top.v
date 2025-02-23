@@ -87,12 +87,12 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     //     .obstacle2_type(obstacle2_type)
     // );
 
-    // // VGA signals
-    // wire hsync;
-    // wire vsync;
-    // wire [1:0] R;
-    // wire [1:0] G;
-    // wire [1:0] B;
+    // VGA signals
+    wire hsync;
+    wire vsync;
+    wire [1:0] R;
+    wire [1:0] G;
+    wire [1:0] B;
   
     // // graphics/rendering signals
     // wire [9:CONV] hpos;
