@@ -20,9 +20,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     assign uio_out = 0;
     assign uio_oe  = 0;
 
-    // List all unused inputs to prevent warnings
-    wire _unused = &{ena, clk, rst_n, 1'b0};
-
     wire       vpos_5;
     wire       game_tick_60hz;
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
@@ -163,5 +160,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
   
     // TinyVGA PMOD
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
+ 
+    // List all unused inputs to prevent warnings
+    wire _unused = &{ena};
 
 endmodule
