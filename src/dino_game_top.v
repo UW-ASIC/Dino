@@ -62,9 +62,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
 
     lfsr #(.NUM_BITS(8)) lfsr_inst (
         .clk(clk),
-        .rst_n(rst_n),
-        .ena(1'b1),
-        .rng(rng)
+        .enable(ena),
+        .lfsr_data(rng)
     );
 
     player_controller player_constroller_inst (
