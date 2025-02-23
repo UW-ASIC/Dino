@@ -13,22 +13,24 @@ module lfsr
 
   // Create Feedback Polynomials.  Based on Application Note:
   // http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf
-  case (NUM_BITS)
-    3: assign r_xnor = r_lfsr[3] ^~ r_lfsr[2];
-    4: assign r_xnor = r_lfsr[4] ^~ r_lfsr[3];
-    5: assign r_xnor = r_lfsr[5] ^~ r_lfsr[3];
-    6: assign r_xnor = r_lfsr[6] ^~ r_lfsr[5];
-    7: assign r_xnor = r_lfsr[7] ^~ r_lfsr[6];
-    8: assign r_xnor = r_lfsr[8] ^~ r_lfsr[6] ^~ r_lfsr[5] ^~ r_lfsr[4];
-    9: assign r_xnor = r_lfsr[9] ^~ r_lfsr[5];
-    10: assign r_xnor = r_lfsr[10] ^~ r_lfsr[7];
-    11: assign r_xnor = r_lfsr[11] ^~ r_lfsr[9];
-    12: assign r_xnor = r_lfsr[12] ^~ r_lfsr[6] ^~ r_lfsr[4] ^~ r_lfsr[1];
-    13: assign r_xnor = r_lfsr[13] ^~ r_lfsr[4] ^~ r_lfsr[3] ^~ r_lfsr[1];
-    14: assign r_xnor = r_lfsr[14] ^~ r_lfsr[5] ^~ r_lfsr[3] ^~ r_lfsr[1];
-    15: assign r_xnor = r_lfsr[15] ^~ r_lfsr[14];
-    16: assign r_xnor = r_lfsr[16] ^~ r_lfsr[15] ^~ r_lfsr[13] ^~ r_lfsr[4];
-  endcase // case (NUM_BITS)
+  generate
+    case (NUM_BITS)
+      3:  gen_poly assign r_xnor = r_lfsr[3] ^~ r_lfsr[2];
+      4:  gen_poly assign r_xnor = r_lfsr[4] ^~ r_lfsr[3];
+      5:  gen_poly assign r_xnor = r_lfsr[5] ^~ r_lfsr[3];
+      6:  gen_poly assign r_xnor = r_lfsr[6] ^~ r_lfsr[5];
+      7:  gen_poly assign r_xnor = r_lfsr[7] ^~ r_lfsr[6];
+      8:  gen_poly assign r_xnor = r_lfsr[8] ^~ r_lfsr[6] ^~ r_lfsr[5] ^~ r_lfsr[4];
+      9:  gen_poly assign r_xnor = r_lfsr[9] ^~ r_lfsr[5];
+      10: gen_poly assign r_xnor = r_lfsr[10] ^~ r_lfsr[7];
+      11: gen_poly assign r_xnor = r_lfsr[11] ^~ r_lfsr[9];
+      12: gen_poly assign r_xnor = r_lfsr[12] ^~ r_lfsr[6] ^~ r_lfsr[4] ^~ r_lfsr[1];
+      13: gen_poly assign r_xnor = r_lfsr[13] ^~ r_lfsr[4] ^~ r_lfsr[3] ^~ r_lfsr[1];
+      14: gen_poly assign r_xnor = r_lfsr[14] ^~ r_lfsr[5] ^~ r_lfsr[3] ^~ r_lfsr[1];
+      15: gen_poly assign r_xnor = r_lfsr[15] ^~ r_lfsr[14];
+      16: gen_poly assign r_xnor = r_lfsr[16] ^~ r_lfsr[15] ^~ r_lfsr[13] ^~ r_lfsr[4];
+    endcase // case (NUM_BITS)
+  endgenerate
 
   always @(posedge clk) begin
     if (enable == 1'b1)
