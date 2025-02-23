@@ -15,7 +15,6 @@ module lfsr
   // http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf
   generate
     case (NUM_BITS)
-    case (NUM_BITS)
       3: begin : gen_poly assign r_xnor = r_lfsr[3] ^~ r_lfsr[2]; end
       4: begin : gen_poly assign r_xnor = r_lfsr[4] ^~ r_lfsr[3]; end
       5: begin : gen_poly assign r_xnor = r_lfsr[5] ^~ r_lfsr[3]; end
