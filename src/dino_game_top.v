@@ -57,7 +57,15 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     wire [8:0] obstacle2_pos;
     wire [2:0] obstacle1_type;
     wire [2:0] obstacle2_type;
+
     wire [7:0] rng;
+
+    lfsr #(.NUM_BITS(8)) lfsr_inst (
+        .clk(clk),
+        .rst_n(rst_n),
+        .ena(1'b1),
+        .rng(rng)
+    );
 
     player_controller player_constroller_inst (
         .clk(clk),

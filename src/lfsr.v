@@ -1,6 +1,7 @@
 // See https://nandland.com/lfsr-linear-feedback-shift-register/
+`default_nettype none
 
-module LFSR
+module lfsr
   #(    parameter NUM_BITS = 8)
 (
   input wire clk,
