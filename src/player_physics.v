@@ -25,8 +25,8 @@ module player_physics #(
 
   // game_tick[1] == 0 means calculating velocity, game_tick[1] == 1 means calculating position
   assign adder_in1 = (game_tick[1]) ? active_vel : DOWNWARD_ACCELERATION;
-  assign adder_in2 = (game_tick[1]) ? position : { 2'b00, velocity };
-  assign adder_res = { 2'b00, adder_in1 } + adder_in2;
+  assign adder_in2 = (game_tick[1]) ? position : { {2{velocity[3]}}, velocity };
+  assign adder_res = { {2{velocity[3]}}, adder_in1 } + adder_in2;
 
   always @ (posedge clk) begin
     if (!rst_n) begin
