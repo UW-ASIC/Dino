@@ -111,7 +111,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     score_render #(.CONV(CONV)) score_inst (
         .clk(clk),
         .rst(~rst_n),
-        .num(3),
+        .num(score),
         .i_hpos(hpos),
         .i_vpos(vpos),
         .o_score_color(score_color)
