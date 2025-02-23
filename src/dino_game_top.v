@@ -156,6 +156,23 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .o_vpos_5_r(debounce_countdown_en),
         .o_collision(crash)
     );
+
+    ScoreModule score_module_inst (
+        .game_start(game_start_pulse),     
+        .game_over(game_over_pulse),      
+        .game_tick(game_tick_60hz),     
+        .clk(clk),            // clock
+        .rst_n(rst_n),          // reset_n - low to reset
+        .score(score)    
+    );
+
+    audio_interface adio_inst (
+        .clk(clk),
+        .rst_n(rst_n),
+        .game_is_over(game_over_pulse),
+        .jump_pulse(jump_pulse),
+        .sound(uio_out[7])
+    );
   
     // TinyVGA PMOD
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
