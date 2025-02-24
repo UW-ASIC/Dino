@@ -224,8 +224,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
 
     // All output pins must be assigned. If not used, assign to 0.
-    assign uio_out = 0;
-    assign uio_oe  = 0;
+    assign uio_out[6:0] = 0;
+    assign uio_oe  = 8'b10000000;
 
     // List all unused inputs to prevent warnings
     wire _unused = &{ena, ui_in[7:2], uio_in, 1'b0};
