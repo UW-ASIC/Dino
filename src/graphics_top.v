@@ -30,11 +30,11 @@ module graphics_top #(parameter CONV = 0)(
     // TODO can remove this pipeline stage if we don't need it
     reg hsync;
     reg vsync;
-    reg hsync_r;
-    reg vsync_r;
+    // reg hsync_r;
+    // reg vsync_r;
     // TODO might be able to set display_on to always be on / cordinated with
     // only vsync
-    reg display_on_r;
+    // reg display_on_r;
 
     // TODO create custom hsync
     hvsync_generator hvsync_gen (
@@ -50,15 +50,15 @@ module graphics_top #(parameter CONV = 0)(
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            hsync_r <= 1'b0;
-            vsync_r <= 1'b0;
+            // hsync_r <= 1'b0;
+            // vsync_r <= 1'b0;
             vpos_5_r <= 1'b0;
-            display_on_r <= 1'b0;
+            // display_on_r <= 1'b0;
         end else begin
-            vsync_r <= vsync;
-            hsync_r <= hsync;
+            // vsync_r <= vsync;
+            // hsync_r <= hsync;
             vpos_5_r <= vpos[5];
-            display_on_r <= display_on;
+            // display_on_r <= display_on;
         end
     end
 
