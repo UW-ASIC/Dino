@@ -40,19 +40,19 @@ module ScoreModule (
                 // Reset the game if the score gets to 9999
                 score_int[3] <= 0;
               end else begin
-                score_int[3] = score_int[3] + 1;
-                score_int[2] = 0;
+                score_int[3] <= score_int[3] + 1;
+                score_int[2] <= 0;
               end
             end else begin
-              score_int[2] = score_int[2] + 1;
-              score_int[1] = 0;
+              score_int[2] <= score_int[2] + 1;
+              score_int[1] <= 0;
             end
           end else begin
-            score_int[1] = score_int[1] + 1;
-            score_int[0] = 0;
+            score_int[1] <= score_int[1] + 1;
+            score_int[0] <= 0;
           end
         end else begin
-          score_int[0] = score_int[0] + 1;
+          score_int[0] <= score_int[0] + 1;
         end
       end
       

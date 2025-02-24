@@ -3,7 +3,11 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <verilated.h>
+#include "verilated_vpi.h"
 #include "Vtop_dino.h"
+#include <atomic>
+
+double sc_time_stamp() { return 0; }
 
 // screen dimensions
 const int H_RES = 640;
@@ -113,6 +117,19 @@ class VGAController {
 
 };
 
+std::atomic<bool> running(true);  // Shared flag for program state
+
+int EventThread(void* data) {
+    SDL_Event e;
+    while (SDL_WaitEvent(&e)) {
+        if (e.type == SDL_QUIT) {
+            running = false;
+            break;
+        }
+    }
+    return 0;
+}
+
 int main(int argc, char* argv[]) {
     Verilated::commandArgs(argc, argv);
 
@@ -148,6 +165,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    SDL_Thread* eventThread = SDL_CreateThread(EventThread, "EventThread", NULL);
+
     // reference SDL keyboard state array: https://wiki.libsdl.org/SDL_GetKeyboardState
     const Uint8 *keyb_state = SDL_GetKeyboardState(NULL);
 
@@ -175,15 +194,59 @@ int main(int argc, char* argv[]) {
     uint64_t start_ticks = SDL_GetPerformanceCounter();
     uint64_t frame_count = 0;
 
-    int test = 0;
 
+
+    // https://verilator.org/guide/latest/connecting.html#vpi-example
+    // get handle to game_state signal
+    vpiHandle game_state_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.player_constroller_inst.game_state", NULL);
+    if (!game_state_vh) vl_fatal(__FILE__, __LINE__, "sim_main", "No handle found");
+    const char* game_state_name = vpi_get_str(vpiName, game_state_vh);
+    const char* game_state_type = vpi_get_str(vpiType, game_state_vh);
+    const int game_state_size = vpi_get(vpiSize, game_state_vh);
+    printf("register name: %s, type: %s, size: %d\n", game_state_name, game_state_type, game_state_size); 
+    s_vpi_value game_state_val;
+    game_state_val.format = vpiIntVal;
+
+    int game_state_val_old = -1;
+
+    // get handle to generic 1 signal
+    vpiHandle g1_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.player_constroller_inst.player_position", NULL);
+    if (!g1_vh) vl_fatal(__FILE__, __LINE__, "sim_main", "No handle found");
+    const char* g1_name = vpi_get_str(vpiName, g1_vh);
+    const char* g1_type = vpi_get_str(vpiType, g1_vh);
+    const int g1_size = vpi_get(vpiSize, g1_vh);
+    printf("register name: %s, type: %s, size: %d\n", g1_name, g1_type, g1_size); 
+    s_vpi_value g1_val;
+    g1_val.format = vpiIntVal;
+
+    int g1_old = -1;
+
+    
+
+    long long clk_count = 0;
     // main loop
-    while (1) {
+    while (running) {
+
+        vpi_get_value(game_state_vh, &game_state_val);
+
+        if (game_state_val.value.integer != game_state_val_old) {
+            game_state_val_old = game_state_val.value.integer;
+            printf("state value: %d, clock: %lld\n", game_state_val_old, clk_count);
+        }
+
+        vpi_get_value(g1_vh, &g1_val);
+
+        if (g1_val.value.integer != g1_old) {
+            g1_old = g1_val.value.integer;
+            printf("g1 value: %d, clock: %lld\n", g1_old, clk_count);
+        }
+
         // cycle the clock
         top->clk = 1;
         top->eval();
         top->clk = 0;
         top->eval();
+        clk_count ++;
 
         // printf("x: %d y: %d vx: %d b: %d\n", vga.getX(), vga.getY(), top->hpos, top->ypos, (((top->uo_out & 0b01000000) << 0) | ((top->uo_out & 0b00000100) << 5)));
 
@@ -196,23 +259,18 @@ int main(int argc, char* argv[]) {
             Pixel* p = &screenbuffer[vga.getY()*H_RES + vga.getX()];
             p->a = 0xFF;  // transparency
             p->b = (((top->uo_out & 0b01000000) << 0) | ((top->uo_out & 0b00000100) << 5));
-            p->g = 0;
+            // p->g = 0;
             // p->r = 0;
-            // p->g = (((top->uo_out & 0b00100000) << 1) | ((top->uo_out & 0b00000010) << 6));
+            p->g = (((top->uo_out & 0b00100000) << 1) | ((top->uo_out & 0b00000010) << 6));
             p->r = (((top->uo_out & 0b00010000) << 2) | ((top->uo_out & 0b00000001) << 7));
         }
 
         // update texture once per frame (in blanking)
         if (vga.getY() == V_RES && vga.getX() == 0) {
-            // check for quit event
-            SDL_Event e;
-            if (SDL_PollEvent(&e)) {
-                if (e.type == SDL_QUIT) {
-                    break;
-                }
-            }
 
-            if (keyb_state[SDL_SCANCODE_Q]) break;  // quit if user presses 'Q'
+            // update keyboard state
+            top->ui_in = keyb_state[SDL_SCANCODE_UP];
+            top->ui_in = top->ui_in | keyb_state[SDL_SCANCODE_DOWN] << 1;
 
             SDL_UpdateTexture(sdl_texture, NULL, screenbuffer, H_RES*sizeof(Pixel));
             SDL_RenderClear(sdl_renderer);

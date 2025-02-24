@@ -16,33 +16,28 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-    // All output pins must be assigned. If not used, assign to 0.
-    assign uio_out = 0;
-    assign uio_oe  = 0;
-
-    wire       vpos_5;
     wire       game_tick_60hz;
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
 
     wire debounce_countdown_en; // pulse on rising edge of 5th vpos bit
-    wire button_up;
-    wire button_down;
+    wire button_up; 
+    wire button_down; 
 
-// button_debounce button_up_debounce (
-//     .clk(clk),
-//     .rst_n(rst_n),
-//     .countdown_en(debounce_countdown_en),
-//     .button_in(ui_in[0]),
-//     .button_out(button_up)
-// );
-
-//  button_debounce button_down_debounce (
-//    .clk(clk),
-//    .rst_n(rst_n),
-//    .countdown_en(debounce_countdown_en),
-//    .button_in(ui_in[1]),
-//    .button_out(button_down)
-//  );
+    button_debounce button_up_debounce (
+        .clk(clk),
+        .rst_n(rst_n),
+        .countdown_en(debounce_countdown_en),
+        .button_in(ui_in[0]),
+        .button_out(button_up)
+    );
+    
+     button_debounce button_down_debounce (
+       .clk(clk),
+       .rst_n(rst_n),
+       .countdown_en(debounce_countdown_en),
+       .button_in(ui_in[1]),
+       .button_out(button_down)
+     );
 
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
@@ -50,8 +45,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     wire game_start_pulse;
     wire game_over_pulse;
     wire jump_pulse;
-    wire jumping;
-    wire ducking;
+    wire [2:0] game_state;
 
     wire [8:0] obstacle1_pos;
     wire [8:0] obstacle2_pos;
@@ -77,8 +71,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .game_start_pulse(game_start_pulse),
         .game_over_pulse(game_over_pulse),
         .jump_pulse(jump_pulse),
-        .jumping(jumping),
-        .ducking(ducking)
+        .game_state(game_state)
     );
 
     obstacles #(.GEN_LINE(250)) obstacles_inst (
@@ -109,16 +102,15 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     wire [5:0] dino_rom_counter;
     wire [2:0] obs_rom_counter;
  
-    dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .o_sprite_color(dino_color));
+    dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .i_player_state(game_state), .o_sprite_color(dino_color));
     obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
   
-    // score wires
-    wire score;
+    wire[15:0] score;
 
     score_render #(.CONV(CONV)) score_inst (
         .clk(clk),
         .rst(~rst_n),
-        .num(score),
+        .num(3),
         .i_hpos(hpos),
         .i_vpos(vpos),
         .o_score_color(score_color)
@@ -133,7 +125,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .i_sprite_color(dino_color),
         .i_ypos(player_position)
     );
-    obs_render #(.CONV(CONV)) obs_inst  (
+    obs_render #(.CONV(CONV)) obs_inst_1  (
         .clk(clk),
         .rst(~rst_n),
         .i_hpos(hpos),
@@ -144,7 +136,19 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .i_obs_type(obstacle1_type),
         .i_xpos(obstacle1_pos)
     );
-  
+
+    obs_render #(.CONV(CONV)) obs_inst_2  (
+        .clk(clk),
+        .rst(~rst_n),
+        .i_hpos(hpos),
+        .i_vpos(vpos),
+        .o_color_obs(color_obs),
+        .o_rom_counter(obs_rom_counter),
+        .i_sprite_color(obs_color),
+        .i_obs_type(obstacle2_type),
+        .i_xpos(obstacle2_pos)
+    );
+
     graphics_top #(.CONV(CONV)) graphics_inst  (
         .clk(clk),
         .rst(~rst_n),
@@ -162,7 +166,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .o_game_tick_60hz(game_tick_60hz),
         .o_game_tick_20hz(game_tick_20hz[0]),
         .o_game_tick_20hz_r(game_tick_20hz[1]),
-        .o_vpos_5_r(vpos_5),
+        .o_vpos_5_r(debounce_countdown_en),
         .o_collision(crash)
     );
 
@@ -185,8 +189,12 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
   
     // TinyVGA PMOD
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
- 
+
+    // All output pins must be assigned. If not used, assign to 0.
+    assign uio_out = 0;
+    assign uio_oe  = 0;
+
     // List all unused inputs to prevent warnings
-    wire _unused = &{ena};
+    wire _unused = &{ena, ui_in[7:2], uio_in, 1'b0};
 
 endmodule
