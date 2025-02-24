@@ -13,6 +13,7 @@ reg [9:CONV] y_offset;
 reg [9:CONV] x_offset;
 reg in_sprite;
 reg [7:0] segment;
+reg score_color;
 
 always @(*) begin
   y_offset = i_vpos - 1;
@@ -28,9 +29,16 @@ always @(*) begin
   segment[6] = y_offset == 6 && (num == 0 || num == 2 || num == 3 || num == 5|| num == 6 || num == 8);
 end 
 
+always @(posedge clk or posedge rst) begin
+  if (rst) begin 
+    score_color <= 0;
+  end else begin
+    score_color <= |segment && in_sprite;
+  end
+end
+
 always @(*) begin
-  o_score_color = |segment && in_sprite;
-  //o_score_color = 1;
+  o_score_color = score_color;
 end
 
 endmodule

@@ -8,12 +8,12 @@ module dino_rom (
   output reg  o_sprite_color
 );
 
-localparam RESTART   = 3'b000;
+// localparam RESTART   = 3'b000;
 localparam JUMPING   = 3'b001;
 localparam RUNNING_1 = 3'b010;
 localparam RUNNING_2 = 3'b011;
 localparam DUCKING   = 3'b100;
-localparam GAME_OVER = 3'b101;
+// localparam GAME_OVER = 3'b101;
 
 reg [2:0] rom_x;
 reg [2:0] rom_y;
