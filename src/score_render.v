@@ -12,7 +12,7 @@ module score_render #(parameter CONV = 0, parameter OFFSET = 0) (
 reg [9:CONV] y_offset;
 reg [9:CONV] x_offset;
 reg in_sprite;
-reg [7:0] segment;
+reg [6:0] segment;
 reg score_color;
 
 always @(*) begin

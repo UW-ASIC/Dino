@@ -58,9 +58,6 @@ module ScoreModule (
       
     end
   end
-
-// List all unused inputs to prevent warnings
-  wire _unused = &{clk, rst_n};
   
   assign score = {score_int[3], score_int[2], score_int[1], score_int[0]};
 
