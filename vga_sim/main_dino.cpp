@@ -221,7 +221,29 @@ int main(int argc, char* argv[]) {
 
     int g1_old = -1;
 
-    
+    // get handle to obs_pos_1 signal
+    vpiHandle obstacle1_pos_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.obstacle1_pos", NULL);
+    if (!obstacle1_pos_vh) vl_fatal(__FILE__, __LINE__, "sim_main", "No handle found");
+    const char* obstacle1_pos_name = vpi_get_str(vpiName, obstacle1_pos_vh);
+    const char* obstacle1_pos_type = vpi_get_str(vpiType, obstacle1_pos_vh);
+    const int obstacle1_pos_size = vpi_get(vpiSize, obstacle1_pos_vh);
+    printf("register name: %s, type: %s, size: %d\n", obstacle1_pos_name, obstacle1_pos_type, obstacle1_pos_size); 
+    s_vpi_value obstacle1_pos_val;
+    obstacle1_pos_val.format = vpiIntVal;
+
+    int obstacle1_pos_old = -1;
+    // get handle to obs_pos_2 signal
+    vpiHandle obstacle2_pos_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.obstacle2_pos", NULL);
+    if (!obstacle2_pos_vh) vl_fatal(__FILE__, __LINE__, "sim_main", "No handle found");
+    const char* obstacle2_pos_name = vpi_get_str(vpiName, obstacle2_pos_vh);
+    const char* obstacle2_pos_type = vpi_get_str(vpiType, obstacle2_pos_vh);
+    const int obstacle2_pos_size = vpi_get(vpiSize, obstacle2_pos_vh);
+    printf("register name: %s, type: %s, size: %d\n", obstacle2_pos_name, obstacle2_pos_type, obstacle2_pos_size); 
+    s_vpi_value obstacle2_pos_val;
+    obstacle2_pos_val.format = vpiIntVal;
+
+    int obstacle2_pos_old = -1;
+
 
     long long clk_count = 0;
     // main loop
@@ -239,6 +261,20 @@ int main(int argc, char* argv[]) {
         if (g1_val.value.integer != g1_old) {
             g1_old = g1_val.value.integer;
             printf("g1 value: %d, clock: %lld\n", g1_old, clk_count);
+        }
+
+        vpi_get_value(obstacle1_pos_vh, &obstacle1_pos_val);
+
+        if (obstacle1_pos_val.value.integer != obstacle1_pos_old) {
+            obstacle1_pos_old = obstacle1_pos_val.value.integer;
+            printf("obstacle1_pos value: %d, clock: %lld\n", obstacle1_pos_old, clk_count);
+        }
+
+        vpi_get_value(obstacle2_pos_vh, &obstacle2_pos_val);
+
+        if (obstacle2_pos_val.value.integer != obstacle2_pos_old) {
+            obstacle2_pos_old = obstacle2_pos_val.value.integer;
+            printf("obstacle2_pos value: %d, clock: %lld\n", obstacle2_pos_old, clk_count);
         }
 
         // cycle the clock

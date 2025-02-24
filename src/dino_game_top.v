@@ -47,8 +47,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire jump_pulse;
     wire [2:0] game_state;
 
-    wire [9:CONV] obstacle1_pos;
-    wire [9:CONV] obstacle2_pos;
+    wire [9:CONV] obstacle1_pos /*verilator public*/;
+    wire [9:CONV] obstacle2_pos /*verilator public*/;
     wire [2:0] obstacle1_type;
     wire [2:0] obstacle2_type;
 
@@ -74,7 +74,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .game_state(game_state)
     );
 
-    obstacles #(.GEN_LINE(250), .CONV(CONV)) obstacles_inst (
+    obstacles #(.GEN_LINE(120), .CONV(CONV)) obstacles_inst (
         .clk(game_tick_60hz),
         .rst_n(rst_n),
         .rng(rng),
