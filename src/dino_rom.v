@@ -25,7 +25,7 @@ reg [7:0] icon_run_1 [7:0];
 reg [7:0] icon_run_2 [7:0];
 reg [7:0] icon_duck [7:0];
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk) begin
   if (rst) begin
     icon[0] <= 8'b01110000;
     icon[1] <= 8'b11110000;
@@ -38,7 +38,7 @@ always @(posedge clk or posedge rst) begin
   end
 end
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk) begin
   if (rst) begin
     icon_run_1[0] <= 8'b01110000;
     icon_run_1[1] <= 8'b11110000;
@@ -51,7 +51,7 @@ always @(posedge clk or posedge rst) begin
   end
 end
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk) begin
   if (rst) begin
     icon_run_2[0] <= 8'b01110000;
     icon_run_2[1] <= 8'b11110000;
@@ -64,7 +64,7 @@ always @(posedge clk or posedge rst) begin
   end
 end
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk) begin
   if (rst) begin
     icon_duck[0] <= 8'b00000000;
     icon_duck[1] <= 8'b00000000;

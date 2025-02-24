@@ -29,7 +29,7 @@ always @(*) begin
   segment[6] = y_offset == 6 && (num == 0 || num == 2 || num == 3 || num == 5|| num == 6 || num == 8);
 end 
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk) begin
   if (rst) begin 
     score_color <= 0;
   end else begin

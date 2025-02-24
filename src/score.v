@@ -19,7 +19,7 @@ module ScoreModule (
   reg game_active = 1'b0;
 
   // determine if game_active
-  always @(posedge clk or negedge rst_n) begin
+  always @(posedge clk) begin
     if (!rst_n) begin
       game_active <= 1'b0;
       score_int[0] <= 0;

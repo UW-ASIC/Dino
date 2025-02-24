@@ -23,7 +23,7 @@ module dino_render #(parameter CONV = 0) (
 
   reg [9:CONV] y_offset_r;
   reg [9:CONV] x_offset_r;
-  always @(posedge clk or posedge rst) begin
+  always @(posedge clk) begin
   if (rst) begin 
     y_offset_r <= 0;
     x_offset_r <= 0;

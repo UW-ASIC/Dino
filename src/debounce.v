@@ -10,7 +10,7 @@ module button_debounce(
 
   reg [3:0] counter;
 
-  always @(posedge clk or negedge rst_n) begin
+  always @(posedge clk) begin
       if      (!rst_n)                       counter <= 0;
       else if (button_in)                    counter <= 15;
       else if (countdown_en && counter != 0) counter <= counter - 1;

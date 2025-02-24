@@ -26,7 +26,7 @@ always @(*) begin
 end
 reg [1:0] icon [3:0];
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk) begin
   if (rst) begin
     icon[0] <= 2'b01;
     icon[1] <= 2'b01;

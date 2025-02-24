@@ -30,7 +30,7 @@ module obs_render #(parameter CONV = 0) (
   // ROM addressing
   reg rom_x;
   reg [1:0] rom_y;
-  always @(posedge clk or posedge rst) begin
+  always @(posedge clk) begin
     if (rst) begin 
       rom_x <= 0;
       rom_y <= 0;

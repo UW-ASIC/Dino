@@ -122,7 +122,7 @@ module graphics_top #(parameter CONV = 0)(
         o_collision = i_color_obstacle && i_color_player;
     end
 
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if (rst) begin
             frame_counter <= 0; 
             game_tick_r <= 0;
