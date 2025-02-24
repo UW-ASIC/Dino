@@ -34,7 +34,7 @@ module dino_render #(parameter CONV = 0) (
   end 
 
   always @(*) begin
-    y_offset = i_vpos + {i_ypos[5], i_ypos} - 30;
+    y_offset = i_vpos - ({{(2){i_ypos[5]}}, i_ypos}) - 50;
     x_offset = i_hpos - 6;
     in_sprite = (x_offset_r < 8) && (y_offset_r < 8);
   end 
