@@ -105,7 +105,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .i_player_state(game_state), .o_sprite_color(dino_color));
     obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
   
-    wire score[15:0];
+    wire[15:0] score;
 
     score_render #(.CONV(CONV)) score_inst (
         .clk(clk),
