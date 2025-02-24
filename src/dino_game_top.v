@@ -109,8 +109,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire [2:0] obs_rom_counter_2;
  
     dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .i_player_state(game_state), .o_sprite_color(dino_color));
-    obs_rom obs_rom_inst_1 (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter_1), .o_sprite_color(obs_color_1));
-    obs_rom obs_rom_inst_2 (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter_2), .o_sprite_color(obs_color_2));
+    obs_rom obs_rom_inst_1 (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter_1), .i_obs_type(obstacle1_type), .o_sprite_color(obs_color_1));
+    obs_rom obs_rom_inst_2 (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter_2), .i_obs_type(obstacle2_type), .o_sprite_color(obs_color_2));
   
     wire [15:0] score;
 
@@ -168,7 +168,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_color_obs(color_obs_1),
         .o_rom_counter(obs_rom_counter_1),
         .i_sprite_color(obs_color_1),
-        .i_obs_type(obstacle1_type),
         .i_xpos(obstacle1_pos)
     );
 
@@ -180,7 +179,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_color_obs(color_obs_2),
         .o_rom_counter(obs_rom_counter_2),
         .i_sprite_color(obs_color_2),
-        .i_obs_type(obstacle2_type),
         .i_xpos(obstacle2_pos)
     );
   

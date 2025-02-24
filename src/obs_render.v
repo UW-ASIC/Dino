@@ -14,7 +14,6 @@ module obs_render #(parameter CONV = 0) (
   input wire  i_sprite_color,
 
   // Obstacle
-  input wire [2:0] i_obs_type,
   input wire [8:CONV-1] i_xpos
 );
 
