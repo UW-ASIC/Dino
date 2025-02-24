@@ -1,6 +1,6 @@
 `default_nettype none
 
-module score_render #(parameter CONV = 0) (
+module score_render #(parameter CONV = 0, parameter OFFSET = 0) (
   input  wire       clk,     
   input  wire       rst, 
   input wire [3:0] num,
@@ -12,12 +12,12 @@ module score_render #(parameter CONV = 0) (
 reg [9:CONV] y_offset;
 reg [9:CONV] x_offset;
 reg in_sprite;
-reg [7:0] segment;
+reg [6:0] segment;
 reg score_color;
 
 always @(*) begin
   y_offset = i_vpos - 1;
-  x_offset = i_hpos - 28;
+  x_offset = i_hpos - OFFSET;
   in_sprite = (x_offset < 4) && (y_offset < 7);
   
   segment[0] = y_offset == 0 && (num == 0 || num == 2 || num == 3 || num == 5 || num == 6 || num == 7 || num == 8 || num == 9);

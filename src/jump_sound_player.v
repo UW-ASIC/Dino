@@ -111,14 +111,14 @@ module jump_sound_player (
                     if (counter >= decay_value) begin
                         wave_out <= 0;  // Toggle waveform
                     end
-                    else begin
-                        counter <= counter + 1;
-                    end
 
                     if (counter >= PWM_ARR_PERIOD) begin  // Once we complete a full cycle
                             wave_out    <= 1;
                             counter     <= 0;
                             stage_index <= stage_index + 1;
+                    end
+                    else begin
+                        counter <= counter + 1;
                     end
 
                     case (stage_index)
