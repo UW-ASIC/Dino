@@ -5,7 +5,7 @@
 
 `default_nettype none 
  
-module tt_um_uwasic_dinogame #(parameter CONV = 3) (
+module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -47,8 +47,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     wire jump_pulse;
     wire [2:0] game_state;
 
-    wire [8:0] obstacle1_pos;
-    wire [8:0] obstacle2_pos;
+    wire [9:CONV] obstacle1_pos;
+    wire [9:CONV] obstacle2_pos;
     wire [2:0] obstacle1_type;
     wire [2:0] obstacle2_type;
 
@@ -74,7 +74,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .game_state(game_state)
     );
 
-    obstacles #(.GEN_LINE(250)) obstacles_inst (
+    obstacles #(.GEN_LINE(250), .CONV(CONV)) obstacles_inst (
         .clk(game_tick_60hz),
         .rst_n(rst_n),
         .rng(rng),
@@ -105,7 +105,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
     dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .i_player_state(game_state), .o_sprite_color(dino_color));
     obs_rom obs_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter), .o_sprite_color(obs_color));
   
-    wire[15:0] score;
+    wire [15:0] score;
 
     score_render #(.CONV(CONV)) score_inst (
         .clk(clk),
@@ -125,7 +125,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .i_sprite_color(dino_color),
         .i_ypos(player_position)
     );
-    obs_render #(.CONV(CONV)) obs_inst_1  (
+    obs_render #(.CONV(CONV)) obs_inst  (
         .clk(clk),
         .rst(~rst_n),
         .i_hpos(hpos),
@@ -136,19 +136,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 3) (
         .i_obs_type(obstacle1_type),
         .i_xpos(obstacle1_pos)
     );
-
-    obs_render #(.CONV(CONV)) obs_inst_2  (
-        .clk(clk),
-        .rst(~rst_n),
-        .i_hpos(hpos),
-        .i_vpos(vpos),
-        .o_color_obs(color_obs),
-        .o_rom_counter(obs_rom_counter),
-        .i_sprite_color(obs_color),
-        .i_obs_type(obstacle2_type),
-        .i_xpos(obstacle2_pos)
-    );
-
+  
     graphics_top #(.CONV(CONV)) graphics_inst  (
         .clk(clk),
         .rst(~rst_n),

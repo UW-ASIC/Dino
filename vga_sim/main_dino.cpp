@@ -198,7 +198,7 @@ int main(int argc, char* argv[]) {
 
     // https://verilator.org/guide/latest/connecting.html#vpi-example
     // get handle to game_state signal
-    vpiHandle game_state_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.player_constroller_inst.game_state", NULL);
+    vpiHandle game_state_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.player_constroller_inst.game_state", NULL);
     if (!game_state_vh) vl_fatal(__FILE__, __LINE__, "sim_main", "No handle found");
     const char* game_state_name = vpi_get_str(vpiName, game_state_vh);
     const char* game_state_type = vpi_get_str(vpiType, game_state_vh);
@@ -210,7 +210,7 @@ int main(int argc, char* argv[]) {
     int game_state_val_old = -1;
 
     // get handle to generic 1 signal
-    vpiHandle g1_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.player_constroller_inst.player_position", NULL);
+    vpiHandle g1_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.player_constroller_inst.player_position", NULL);
     if (!g1_vh) vl_fatal(__FILE__, __LINE__, "sim_main", "No handle found");
     const char* g1_name = vpi_get_str(vpiName, g1_vh);
     const char* g1_type = vpi_get_str(vpiType, g1_vh);

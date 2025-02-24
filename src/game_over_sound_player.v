@@ -131,6 +131,7 @@ module game_over_sound_player (
                         5'd13: decay_value <= DECAY_13;
                         5'd14: decay_value <= DECAY_14;
                         5'd15: decay_value <= DECAY_15;
+                        default: decay_value<= DECAY_0;
                     endcase
                 end
 
