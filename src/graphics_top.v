@@ -48,7 +48,7 @@ module graphics_top #(parameter CONV = 0)(
     ); 
 
 
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if (rst) begin
             // hsync_r <= 1'b0;
             // vsync_r <= 1'b0;
@@ -81,7 +81,7 @@ module graphics_top #(parameter CONV = 0)(
                      i_color_background ||
                      i_color_score;
     end
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if (rst) begin
           is_colored_r <= 0;
         end else begin
