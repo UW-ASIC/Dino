@@ -10,11 +10,11 @@ module obs_render #(parameter CONV = 0) (
   output reg o_color_obs,   // Dedicated outputs
 
   // ROM
-  output reg [2:0] o_rom_counter,
+  output reg [7:0] o_rom_counter,
   input wire  i_sprite_color,
 
   // Obstacle
-  input wire [8:CONV-1] i_xpos
+  input wire [9:CONV] i_xpos
 );
 
   reg [9:CONV] y_offset;
@@ -22,22 +22,22 @@ module obs_render #(parameter CONV = 0) (
   reg in_sprite;
 
   always @(*) begin
-    y_offset = i_vpos - 30;
-    x_offset = i_hpos - i_xpos[8:CONV-1];
-    in_sprite = (x_offset < 2) && (y_offset < 4);
+    y_offset = i_vpos - 42;
+    x_offset = i_hpos - i_xpos[9:CONV] + 16;
+    in_sprite = (x_offset < 16) && (y_offset < 16);
   end 
 
   // ROM addressing
-  reg rom_x;
-  reg [1:0] rom_y;
+  reg [3:0] rom_x;
+  reg [3:0] rom_y;
   always @(posedge clk) begin
     if (rst) begin 
       rom_x <= 0;
       rom_y <= 0;
     end else begin
       if (in_sprite) begin
-        rom_x <= x_offset[CONV];
-        rom_y <= y_offset[CONV+1:CONV];
+        rom_x <= x_offset[CONV+3:CONV];
+        rom_y <= y_offset[CONV+3:CONV];
       end 
     end 
   end 

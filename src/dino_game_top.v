@@ -74,7 +74,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .game_state(game_state)
     );
 
-    obstacles #(.GEN_LINE(120), .CONV(CONV)) obstacles_inst (
+    obstacles #(.GEN_LINE(70), .CONV(CONV)) obstacles_inst (
         .clk(game_tick_60hz),
         .rst_n(rst_n),
         .rng(rng),
@@ -105,8 +105,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire score_color_3;
     wire score_color_4;
     wire [5:0] dino_rom_counter;
-    wire [2:0] obs_rom_counter_1;
-    wire [2:0] obs_rom_counter_2;
+    wire [7:0] obs_rom_counter_1;
+    wire [7:0] obs_rom_counter_2;
  
     dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .i_player_state(game_state), .o_sprite_color(dino_color));
     obs_rom obs_rom_inst_1 (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter_1), .i_obs_type(obstacle1_type), .o_sprite_color(obs_color_1));

@@ -27,12 +27,12 @@ module obstacles
             if (obstacle2_pos == GEN_LINE) obstacle2_cross_gen_line_reg <= 1;
             
             if (obstacle1_pos == 0 && obstacle2_cross_gen_line_reg) begin
-                obstacle1_pos <= {{(5-CONV){1'b1}}, rng[4:0]};
+                obstacle1_pos <= {2'b10, {(3-CONV){1'b1}}, rng[4:0]};
                 obstacle1_type <= rng[7:5];
                 obstacle2_cross_gen_line_reg <= 0;
             end
             if (obstacle2_pos== 0 && obstacle1_cross_gen_line_reg) begin
-                obstacle2_pos <= {{(5-CONV){1'b1}}, rng[4:0]};
+                obstacle2_pos <= {2'b10, {(3-CONV){1'b1}}, rng[4:0]};
                 obstacle2_type <= rng[7:5];
                 obstacle1_cross_gen_line_reg <= 0;
             end
