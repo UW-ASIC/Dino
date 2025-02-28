@@ -9,6 +9,7 @@ module player_physics #(
   input clk,
   input rst_n,
   input [1:0] game_tick,     // enable for the FF that stores result of velocity [0] and position [1]
+  input game_over,           // collision has occured -- freeze dino
   input jump_pulse,          // high for one clock cycle at start of jump (set initial velocity)
   input button_down,         // high if down button is pressed
   output reg [5:0] position, // -21..4
@@ -32,7 +33,7 @@ module player_physics #(
     if (!rst_n) begin
       velocity <= 0;
       position <= 0; // Replace with ground position
-    end else begin
+    end else if (!game_over) begin
       if (game_tick[0]) begin
         if      (button_down) velocity <= 0;
         else if (jump_pulse)  velocity <= INITIAL_JUMP_VELOCITY;

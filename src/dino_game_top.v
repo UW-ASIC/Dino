@@ -31,13 +31,13 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .button_out(button_up)
     );
     
-     button_debounce button_down_debounce (
-       .clk(clk),
-       .rst_n(rst_n),
-       .countdown_en(debounce_countdown_en),
-       .button_in(ui_in[1]),
-       .button_out(button_down)
-     );
+    button_debounce button_down_debounce (
+      .clk(clk),
+      .rst_n(rst_n),
+      .countdown_en(debounce_countdown_en),
+      .button_in(ui_in[1]),
+      .button_out(button_down)
+    );
 
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
@@ -64,6 +64,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .clk(clk),
         .rst_n(rst_n),
         .game_tick(game_tick_20hz),
+        .button_start(button_up),
         .button_up(button_up),
         .button_down(button_down),
         .crash(crash),
