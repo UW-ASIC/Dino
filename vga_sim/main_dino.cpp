@@ -31,7 +31,9 @@ const int H_MAX           = H_DISPLAY + H_BACK + H_FRONT + H_SYNC;
 const int V_SYNC_START    = V_DISPLAY + V_BOTTOM;
 const int V_SYNC_END      = V_DISPLAY + V_BOTTOM + V_SYNC;
 const int V_MAX           = V_DISPLAY + V_TOP + V_BOTTOM + V_SYNC;
-
+// audio constants
+const int SAMPLE_RATE = 44100;
+const int PWM_ACCUMULATOR_SIZE = 1134;
 
 typedef struct Pixel {  // for SDL texture
     uint8_t a;  // transparency
@@ -143,6 +145,12 @@ int main(int argc, char* argv[]) {
     SDL_Window*   sdl_window   = NULL;
     SDL_Renderer* sdl_renderer = NULL;
     SDL_Texture*  sdl_texture  = NULL;
+    SDL_AudioDeviceID audio_device;
+    SDL_AudioSpec desired_spec;
+    desired_spec.freq = SAMPLE_RATE;
+    desired_spec.format = AUDIO_U8;
+    desired_spec.samples = 1024;
+    desired_spec.callback = NULL;
 
     sdl_window = SDL_CreateWindow("Bounce", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, H_RES, V_RES, SDL_WINDOW_SHOWN);
@@ -164,6 +172,18 @@ int main(int argc, char* argv[]) {
         printf("Texture creation failed: %s\n", SDL_GetError());
         return 1;
     }
+
+    // Initializing Audio Stream
+    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+	    printf("SDL_Init failed: %s \n", SDL_GetError());
+	    return 1;
+    }
+    audio_device = SDL_OpenAudioDevice(NULL, 0, &desired_spec, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE);
+    if (!audio_device) {
+	    printf("SDL_OpenAudioDevice failed: %s\n", SDL_GetError());
+	    return 1;
+    }
+    SDL_PauseAudioDevice(audio_device, 0); // Start audio playback
 
     SDL_Thread* eventThread = SDL_CreateThread(EventThread, "EventThread", NULL);
 
@@ -246,6 +266,11 @@ int main(int argc, char* argv[]) {
 
 
     long long clk_count = 0;
+
+    /* audio variables */
+    uint32_t pwm_accumulator;
+    uint32_t pwm_sample_count;
+
     // main loop
     while (running) {
 
@@ -314,6 +339,21 @@ int main(int argc, char* argv[]) {
             SDL_RenderPresent(sdl_renderer);
             frame_count++;
         }
+
+	// convert PWM to unsigned 8-bit PCM
+	int pwm_value = (top->uio_out & (1<<7))? 1 : 0;
+	pwm_accumulator += pwm_value;
+	pwm_sample_count++;
+	if (pwm_sample_count >= PWM_ACCUMULATOR_SIZE) {
+		uint8_t output = (pwm_accumulator * ((1<<8)-1))/PWM_ACCUMULATOR_SIZE;
+		pwm_accumulator = 0;
+		pwm_sample_count = 0;
+		int status = SDL_QueueAudio(audio_device, &output, 1);
+		if (!status) {
+			printf("SDL_QueueAudio failed: %s \n", SDL_GetError());
+			return 1;
+		}
+	}
     }
 
     // calculate frame rate
