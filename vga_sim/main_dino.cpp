@@ -33,7 +33,7 @@ const int V_SYNC_END      = V_DISPLAY + V_BOTTOM + V_SYNC;
 const int V_MAX           = V_DISPLAY + V_TOP + V_BOTTOM + V_SYNC;
 // audio constants
 const int SAMPLE_RATE = 44100;
-const int PWM_ACCUMULATOR_SIZE = 1134;
+const int PWM_ACCUMULATOR_SIZE = 1024;
 
 typedef struct Pixel {  // for SDL texture
     uint8_t a;  // transparency
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
     SDL_AudioDeviceID audio_device;
     SDL_AudioSpec desired_spec;
     desired_spec.freq = SAMPLE_RATE;
-    desired_spec.format = AUDIO_U8;
+    desired_spec.format = AUDIO_S16SYS;
     desired_spec.samples = 1024;
     desired_spec.callback = NULL;
 
@@ -178,8 +178,8 @@ int main(int argc, char* argv[]) {
 	    printf("SDL_Init failed: %s \n", SDL_GetError());
 	    return 1;
     }
-    audio_device = SDL_OpenAudioDevice(NULL, 0, &desired_spec, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE);
-    if (!audio_device) {
+    audio_device = SDL_OpenAudioDevice(NULL, 0, &desired_spec, NULL, 0);
+    if (!audio_device) { // Device ID shouldn't be zero
 	    printf("SDL_OpenAudioDevice failed: %s\n", SDL_GetError());
 	    return 1;
     }
@@ -341,15 +341,18 @@ int main(int argc, char* argv[]) {
         }
 
 	// convert PWM to unsigned 8-bit PCM
-	int pwm_value = (top->uio_out & (1<<7))? 1 : 0;
+	uint32_t pwm_value = (top->uio_out >> 7 )  & 1;
 	pwm_accumulator += pwm_value;
 	pwm_sample_count++;
 	if (pwm_sample_count >= PWM_ACCUMULATOR_SIZE) {
-		uint8_t output = (pwm_accumulator * ((1<<8)-1))/PWM_ACCUMULATOR_SIZE;
+		int16_t output = (int16_t)(pwm_accumulator * ((1<<16)-1))/(int16_t)PWM_ACCUMULATOR_SIZE - (1<<15);
+		// printf("PWM sample count: %d\n", pwm_sample_count);
+		// printf("PWM Accumulator: %d\n", pwm_accumulator);
+		// printf("Current pwm_value: %d\n", pwm_value);
 		pwm_accumulator = 0;
 		pwm_sample_count = 0;
 		int status = SDL_QueueAudio(audio_device, &output, 1);
-		if (!status) {
+		if (status < 0) {
 			printf("SDL_QueueAudio failed: %s \n", SDL_GetError());
 			return 1;
 		}
