@@ -44,6 +44,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire [5:0] player_position;
     wire game_start_pulse;
     wire game_over_pulse;
+    wire game_frozen;
     wire jump_pulse;
     wire [2:0] game_state;
 
@@ -69,6 +70,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .button_down(button_down),
         .crash(crash),
         .player_position(player_position),
+        .game_frozen(game_frozen),
         .game_start_pulse(game_start_pulse),
         .game_over_pulse(game_over_pulse),
         .jump_pulse(jump_pulse),
@@ -206,7 +208,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
 
     ScoreModule score_module_inst (
         .game_start(game_start_pulse),     
-        .game_frozen(game_over_pulse),      
+        .game_frozen(game_frozen),      
         .game_tick(game_tick_60hz),     
         .clk(clk),            // clock
         .rst_n(rst_n),          // reset_n - low to reset

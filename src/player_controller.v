@@ -9,6 +9,7 @@ module player_controller (
   input button_down,
   input crash,
   output [5:0] player_position /*verilator public*/,
+  output game_frozen,
   output game_start_pulse,
   output game_over_pulse,
   output jump_pulse,
@@ -85,7 +86,8 @@ module player_controller (
 
   assign running = (game_state == RUNNING1 || game_state == RUNNING2);
 
-  assign game_start_pulse = ((game_state == RESTART || game_state == GAME_OVER) && game_tick[0] && button_start);
+  assign game_frozen      = (game_state == RESTART || game_state == GAME_OVER);
+  assign game_start_pulse = (game_frozen             && game_tick[0] && button_start);
   assign game_over_pulse  = (game_state != GAME_OVER && game_tick[0] && crash    );
   assign jump_pulse       = (running                 && game_tick[0] && button_up);
 
