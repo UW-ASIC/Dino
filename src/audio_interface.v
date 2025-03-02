@@ -1,4 +1,3 @@
-
 module audio_interface(
     input wire clk,
     input wire rst_n,
@@ -9,11 +8,19 @@ module audio_interface(
     wire jump_sound;
     wire game_over_sound;
 
-    always @(posedge clk) begin
+    // Pipeline registers
+    reg jump_sound_reg;
+    reg game_over_sound_reg;
+
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            jump_sound_reg <= 0;
+            game_over_sound_reg <= 0;
             sound <= 0;
         end else begin
-            sound <= jump_sound | game_over_sound;
+            jump_sound_reg <= jump_sound;
+            game_over_sound_reg <= game_over_sound;
+            sound <= jump_sound_reg | game_over_sound_reg;
         end
     end
 
@@ -32,5 +39,3 @@ module audio_interface(
     );
 
 endmodule
-
-
