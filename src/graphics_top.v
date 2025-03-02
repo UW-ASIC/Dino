@@ -50,7 +50,6 @@ module graphics_top #(parameter CONV = 0)(
         if (rst) begin
             // hsync_r <= 1'b0;
             // vsync_r <= 1'b0;
-            vpos_5_r <= 1'b0;
             // display_on_r <= 1'b0;
         end else begin
             // vsync_r <= vsync;
