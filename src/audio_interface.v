@@ -12,7 +12,7 @@ module audio_interface(
     reg jump_sound_reg;
     reg game_over_sound_reg;
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (!rst_n) begin
             jump_sound_reg <= 0;
             game_over_sound_reg <= 0;
