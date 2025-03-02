@@ -143,6 +143,8 @@ module gamepad_pmod_decoder (
     output wire is_present
 );
 
+  wire _unused = &{b, y, select, left, right, a, x, l, r};
+
   // When the controller is not connected, the data register will be all 1's
   wire reg_empty = (data_reg == 12'hfff);
   assign is_present = reg_empty ? 0 : 1'b1;

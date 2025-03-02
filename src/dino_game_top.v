@@ -43,17 +43,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .up(gamepad_up),
         .down(gamepad_down),
         .start(gamepad_start),
-
-        // unused outputs
-        .left(),
-        .right(),
-        .select(),
-        .a(),
-        .b(),
-        .x(),
-        .y(),
-        .l(),
-        .r()
     );
 
     // GAME STATE SIGNALS
