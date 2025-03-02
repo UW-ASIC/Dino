@@ -34,6 +34,10 @@ project:
     - "audio_interface.v"
     - "jump_sound_player.v"
     - "game_over_sound_player.v"
+    - "bg_objects.v"
+    - "bg_objects_rom.v"
+    - "bg_render.v"
+    - "bg_line.v"
 
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
