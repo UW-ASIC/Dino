@@ -18,14 +18,12 @@ module graphics_top #(parameter CONV = 0)(
   output reg o_game_tick_60hz,
   output reg o_game_tick_20hz,
   output reg o_game_tick_20hz_r,
-  output reg o_vpos_5_r,
   output reg o_collision
 );
     // ============== HVSYNC =============
     // TODO can change hpos to increment by 2 to reduce bits
     reg [9:0] hpos;
     reg [9:0] vpos;
-    reg vpos_5_r;
     reg display_on;
     // TODO can remove this pipeline stage if we don't need it
     reg hsync;
@@ -52,12 +50,10 @@ module graphics_top #(parameter CONV = 0)(
         if (rst) begin
             // hsync_r <= 1'b0;
             // vsync_r <= 1'b0;
-            vpos_5_r <= 1'b0;
             // display_on_r <= 1'b0;
         end else begin
             // vsync_r <= vsync;
             // hsync_r <= hsync;
-            vpos_5_r <= vpos[5];
             // display_on_r <= display_on;
         end
     end
@@ -118,7 +114,6 @@ module graphics_top #(parameter CONV = 0)(
         o_game_tick_60hz = (vpos == 0) && (hpos == 0);
         o_game_tick_20hz = frame_counter == 1 && o_game_tick_60hz;
         o_game_tick_20hz_r = game_tick_r;
-        o_vpos_5_r = (vpos[5] == 1) && (vpos_5_r == 0);
         o_collision = i_color_obstacle && i_color_player;
     end
 
