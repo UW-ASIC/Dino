@@ -53,6 +53,9 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire [2:0] obstacle1_type;
     wire [2:0] obstacle2_type;
 
+    wire [9:CONV] bg_object1_pos /* verilator public */;
+    wire [9:CONV] bg_object2_pos /* verilator public */;
+
     wire [7:0] rng;
 
     lfsr #(.NUM_BITS(8)) lfsr_inst (
@@ -87,6 +90,14 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .obstacle2_type(obstacle2_type)
     );
 
+    bg_objects #(.GEN_LINE(65), .CONV(CONV)) bg_objects_inst (
+        .clk(game_tick_60hz),
+        .rst_n(rst_n),
+        .rng(rng),
+        .bg_object1_pos(bg_object1_pos),
+        .bg_object2_pos(bg_object2_pos)
+    );
+
     // VGA signals
     wire hsync;
     wire vsync;
@@ -100,8 +111,12 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire color_dino;
     wire color_obs_1;
     wire color_obs_2;
+    wire color_bg_object_1;
+    wire color_bg_object_2;
     wire obs_color_1;
     wire obs_color_2;
+    wire bg_object_color_1;
+    wire bg_object_color_2;
     wire dino_color;
     wire score_color_1;
     wire score_color_2;
@@ -110,11 +125,15 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire [5:0] dino_rom_counter;
     wire [7:0] obs_rom_counter_1;
     wire [7:0] obs_rom_counter_2;
+    wire [5:0] bg_objects_rom_rom_counter_1;
+    wire [5:0] bg_objects_rom_rom_counter_2;
  
     dino_rom dino_rom_inst (.clk(clk), .rst(~rst_n), .i_rom_counter(dino_rom_counter), .i_player_state(game_state), .o_sprite_color(dino_color));
     obs_rom obs_rom_inst_1 (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter_1), .i_obs_type(obstacle1_type), .o_sprite_color(obs_color_1));
     obs_rom obs_rom_inst_2 (.clk(clk), .rst(~rst_n), .i_rom_counter(obs_rom_counter_2), .i_obs_type(obstacle2_type), .o_sprite_color(obs_color_2));
-  
+    bg_objects_rom bg_objects_rom_inst_1 (.clk(clk), .rst(~rst_n), .i_rom_counter(bg_objects_rom_rom_counter_1), .o_sprite_color(bg_object_color_1));
+    bg_objects_rom bg_objects_rom_inst_2 (.clk(clk), .rst(~rst_n), .i_rom_counter(bg_objects_rom_rom_counter_2), .o_sprite_color(bg_object_color_2));
+
     wire [15:0] score;
 
     score_render #(.CONV(CONV), .OFFSET(120)) score_inst_1 (
@@ -184,7 +203,29 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .i_sprite_color(obs_color_2),
         .i_xpos(obstacle2_pos)
     );
-  
+    
+    bg_render #(.CONV(CONV)) bg_render_inst_1  (
+        .clk(clk),
+        .rst(~rst_n),
+        .i_hpos(hpos),
+        .i_vpos(vpos),
+        .o_color_bg(color_bg_object_1),
+        .o_rom_counter(bg_objects_rom_rom_counter_1),
+        .i_sprite_color(bg_object_color_1),
+        .i_xpos(bg_object1_pos)
+    );
+
+    bg_render #(.CONV(CONV)) bg_render_inst_2  (
+        .clk(clk),
+        .rst(~rst_n),
+        .i_hpos(hpos),
+        .i_vpos(vpos),
+        .o_color_bg(color_bg_object_2),
+        .o_rom_counter(bg_objects_rom_rom_counter_2),
+        .i_sprite_color(bg_object_color_2),
+        .i_xpos(bg_object2_pos)
+    );
+
     graphics_top #(.CONV(CONV)) graphics_inst  (
         .clk(clk),
         .rst(~rst_n),
@@ -193,7 +234,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_blue(B),
         .o_green(G),
         .o_red(R), 
-        .i_color_background(1'b0),
+        .i_color_background(color_bg_object_1 | color_bg_object_2),
         .i_color_obstacle(color_obs_1 | color_obs_2),
         .i_color_player(color_dino),
         .i_color_score(score_color_1 | score_color_2 | score_color_3 | score_color_4),
