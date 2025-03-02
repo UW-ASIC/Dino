@@ -42,7 +42,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .is_present(gamepad_is_present),
         .up(gamepad_up),
         .down(gamepad_down),
-        .start(gamepad_start),
+        .start(gamepad_start)
     );
 
     // GAME STATE SIGNALS
