@@ -1,19 +1,17 @@
 `default_nettype none
 
-module player_controller (
+module ai_controller
+    #(    parameter CONV = 0, parameter GEN_LINE = 250)
+(
   input clk,
   input rst_n,
   input [1:0] game_tick,
-  input button_start,
-  input button_up,
-  input button_down,
+  input wire [9:CONV] obstacle1_pos,
+  input wire [9:CONV] obstacle2_pos,
+  output button_up,
   input crash,
-  output [5:0] player_position /*verilator public*/,
-  output game_start_pulse,
-  output game_over_pulse,
-  output jump_pulse,
-  output reg [2:0] game_state /*verilator public*/
 );
+
 
 
 endmodule
