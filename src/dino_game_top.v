@@ -113,6 +113,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire color_obs_2;
     wire color_bg_object_1;
     wire color_bg_object_2;
+    wire color_bg_line;
     wire obs_color_1;
     wire obs_color_2;
     wire bg_object_color_1;
@@ -226,6 +227,13 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .i_xpos(bg_object2_pos)
     );
 
+    bg_line #(.CONV(CONV), .GND_LINE(59)) bg_line_inst (
+        .clk(clk),
+        .rst(~rst_n),
+        .i_hpos(hpos),
+        .i_vpos(vpos),
+        .o_color_bg(color_bg_line)
+    );
     graphics_top #(.CONV(CONV)) graphics_inst  (
         .clk(clk),
         .rst(~rst_n),
@@ -234,7 +242,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_blue(B),
         .o_green(G),
         .o_red(R), 
-        .i_color_background(color_bg_object_1 | color_bg_object_2),
+        .i_color_background(color_bg_object_1 | color_bg_object_2 | color_bg_line),
         .i_color_obstacle(color_obs_1 | color_obs_2),
         .i_color_player(color_dino),
         .i_color_score(score_color_1 | score_color_2 | score_color_3 | score_color_4),
