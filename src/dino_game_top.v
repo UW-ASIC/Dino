@@ -208,7 +208,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
 
     ScoreModule score_module_inst (
         .game_start(game_start_pulse),     
-        .game_frozen(game_frozen),      
+        .game_frozen(game_over_pulse),      
         .game_tick(game_tick_60hz),     
         .clk(clk),            // clock
         .rst_n(rst_n),          // reset_n - low to reset
