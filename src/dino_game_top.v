@@ -48,8 +48,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire jump_pulse;
     wire [2:0] game_state;
 
-    wire [9:CONV] obstacle1_pos /* verilator public */;
-    wire [9:CONV] obstacle2_pos /* verilator public */;
+    wire [9:CONV] obstacle1_pos;
+    wire [9:CONV] obstacle2_pos;
     wire [2:0] obstacle1_type;
     wire [2:0] obstacle2_type;
 
@@ -197,6 +197,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .i_color_obstacle(color_obs_1 | color_obs_2),
         .i_color_player(color_dino),
         .i_color_score(score_color_1 | score_color_2 | score_color_3 | score_color_4),
+        .i_game_start_pulse(game_start_pulse),
         .o_hpos(hpos),
         .o_vpos(vpos),
         .o_game_tick_60hz(game_tick_60hz),
