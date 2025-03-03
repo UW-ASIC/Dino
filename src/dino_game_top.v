@@ -21,7 +21,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
 
     wire debounce_countdown_en; // pulse on rising edge of 5th vpos bit
     wire button_up; 
-    wire button_down; 
+    wire button_down <= 0; 
 
     // button_debounce button_up_debounce (
     //     .clk(clk),
