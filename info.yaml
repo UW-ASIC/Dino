@@ -34,6 +34,7 @@ project:
     - "audio_interface.v"
     - "jump_sound_player.v"
     - "game_over_sound_player.v"
+    - "ai_controller.v"
 
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
