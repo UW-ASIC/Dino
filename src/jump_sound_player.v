@@ -104,7 +104,7 @@ module jump_sound_player (
                 IDLE: begin
                     stage_index <= 0;
                     counter     <= 0;
-                    wave_out    <= 1;
+                    wave_out    <= 0;
                 end
                 
                 PLAY: begin
