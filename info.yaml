@@ -17,12 +17,20 @@ project:
   # Source files must be in ./src and you must list each source file separately, one per line.
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
+    - "audio_interface.v"
+    - "bg_line.v"
+    - "bg_object.v"
+    - "bg_object_rom.v"
+    - "bg_render.v"
     - "debounce.v"
     - "dino_game_top.v"
     - "dino_render.v"
     - "dino_rom.v"
+    - "gamepad_pmod.v"
+    - "game_over_sound_player.v"
     - "graphics_top.v"
     - "hvsync_generator.v"
+    - "jump_sound_player.v"
     - "lfsr.v"
     - "obs_render.v"
     - "obs_rom.v"
@@ -31,13 +39,6 @@ project:
     - "player_physics.v"
     - "score.v"
     - "score_render.v"
-    - "audio_interface.v"
-    - "jump_sound_player.v"
-    - "game_over_sound_player.v"
-    - "bg_object.v"
-    - "bg_object_rom.v"
-    - "bg_render.v"
-    - "bg_line.v"
 
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
