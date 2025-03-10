@@ -242,7 +242,7 @@ int main(int argc, char* argv[]) {
     s_vpi_value obstacle2_pos_val;
     obstacle2_pos_val.format = vpiIntVal;
 
-    int obstacle2_pos_old = -1; */
+    int obstacle2_pos_old = -1; 
 
     // get handle to obs_pos_1 signal
     vpiHandle bg_object_pos_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.bg_object_pos", NULL);
@@ -255,7 +255,7 @@ int main(int argc, char* argv[]) {
     bg_object_pos_val.format = vpiIntVal;
 
     int bg_object_pos_old = -1;
-
+    */
     long long clk_count = 0;
     // main loop
     while (running) {
@@ -286,7 +286,7 @@ int main(int argc, char* argv[]) {
         if (obstacle2_pos_val.value.integer != obstacle2_pos_old) {
             obstacle2_pos_old = obstacle2_pos_val.value.integer;
             printf("obstacle2_pos value: %d, clock: %lld\n", obstacle2_pos_old, clk_count);
-        } */
+        }
 
         vpi_get_value(bg_object_pos_vh, &bg_object_pos_val);
 
@@ -294,7 +294,8 @@ int main(int argc, char* argv[]) {
             bg_object_pos_old = bg_object_pos_val.value.integer;
             printf("bg_object_pos value: %d, clock: %lld\n", bg_object_pos_old, clk_count);
         }
-
+        */
+        
         // cycle the clock
         top->clk = 1;
         top->eval();
