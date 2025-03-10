@@ -7,25 +7,25 @@ module game_over_sound_player (
     output reg wave_out    // Jump sound square wave output
 );
 
-    localparam [18:0] PERIOD = 19'd200000;   // Clock speed / Frequency -> 50MHz / 660Hz 
+    localparam [18:0] PERIOD = 19'd100000;   // Clock speed / Frequency -> 25MHz / 660Hz 
 
     // Distinct localparams for decay values
-    localparam [18:0] DECAY_0  = 37878;
-    localparam [18:0] DECAY_1  = 33842;
-    localparam [18:0] DECAY_2  = 30208;
-    localparam [18:0] DECAY_3  = 26940;
-    localparam [18:0] DECAY_4  = 24008;
-    localparam [18:0] DECAY_5  = 21383;
-    localparam [18:0] DECAY_6  = 19043;
-    localparam [18:0] DECAY_7  = 16966;
-    localparam [18:0] DECAY_8  = 15135;
-    localparam [18:0] DECAY_9  = 13530;
-    localparam [18:0] DECAY_10 = 12132;
-    localparam [18:0] DECAY_11 = 10924;
-    localparam [18:0] DECAY_12 = 9879;
-    localparam [18:0] DECAY_13 = 8932;
-    localparam [18:0] DECAY_14 = 8076;
-    localparam [18:0] DECAY_15 = 7300;
+    localparam [18:0] DECAY_0  = 19'd18939;
+    localparam [18:0] DECAY_1  = 19'd16921;
+    localparam [18:0] DECAY_2  = 19'd15104;
+    localparam [18:0] DECAY_3  = 19'd13470;
+    localparam [18:0] DECAY_4  = 19'd12004;
+    localparam [18:0] DECAY_5  = 19'd10691;
+    localparam [18:0] DECAY_6  = 19'd9521;
+    localparam [18:0] DECAY_7  = 19'd8483;
+    localparam [18:0] DECAY_8  = 19'd7567;
+    localparam [18:0] DECAY_9  = 19'd6765;
+    localparam [18:0] DECAY_10 = 19'd6066;
+    localparam [18:0] DECAY_11 = 19'd5462;
+    localparam [18:0] DECAY_12 = 19'd4939;
+    localparam [18:0] DECAY_13 = 19'd4466;
+    localparam [18:0] DECAY_14 = 19'd4038;
+    localparam [18:0] DECAY_15 = 19'd3650;
 
     typedef enum logic [1:0] {
         IDLE  = 2'b00,
