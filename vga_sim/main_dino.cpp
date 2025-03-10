@@ -195,7 +195,7 @@ int main(int argc, char* argv[]) {
     uint64_t frame_count = 0;
 
 
-
+    /*
     // https://verilator.org/guide/latest/connecting.html#vpi-example
     // get handle to game_state signal
     vpiHandle game_state_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.player_constroller_inst.game_state", NULL);
@@ -242,7 +242,7 @@ int main(int argc, char* argv[]) {
     s_vpi_value obstacle2_pos_val;
     obstacle2_pos_val.format = vpiIntVal;
 
-    int obstacle2_pos_old = -1;
+    int obstacle2_pos_old = -1; */
 
     // get handle to obs_pos_1 signal
     vpiHandle bg_object_pos_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.bg_object_pos", NULL);
@@ -259,7 +259,7 @@ int main(int argc, char* argv[]) {
     long long clk_count = 0;
     // main loop
     while (running) {
-
+        /*
         vpi_get_value(game_state_vh, &game_state_val);
 
         if (game_state_val.value.integer != game_state_val_old) {
@@ -286,7 +286,7 @@ int main(int argc, char* argv[]) {
         if (obstacle2_pos_val.value.integer != obstacle2_pos_old) {
             obstacle2_pos_old = obstacle2_pos_val.value.integer;
             printf("obstacle2_pos value: %d, clock: %lld\n", obstacle2_pos_old, clk_count);
-        }
+        } */
 
         vpi_get_value(bg_object_pos_vh, &bg_object_pos_val);
 
