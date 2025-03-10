@@ -14,6 +14,7 @@ module graphics_top #(parameter CONV = 0)(
   input wire i_color_player,
   input wire i_color_background,
   input wire i_color_score,
+  input wire i_game_start_pulse,
 
   output reg o_game_tick_60hz,
   output reg o_game_tick_20hz,
@@ -28,11 +29,12 @@ module graphics_top #(parameter CONV = 0)(
     // TODO can remove this pipeline stage if we don't need it
     reg hsync;
     reg vsync;
-    // reg hsync_r;
-    // reg vsync_r;
-    // TODO might be able to set display_on to always be on / cordinated with
-    // only vsync
-    // reg display_on_r;
+    reg hsync_r;
+    reg vsync_r;
+    reg hsync_r_r;
+    reg vsync_r_r;
+    reg display_on_r;
+    reg display_on_r_r;
 
     // TODO create custom hsync
     hvsync_generator hvsync_gen (
@@ -48,19 +50,25 @@ module graphics_top #(parameter CONV = 0)(
 
     always @(posedge clk) begin
         if (rst) begin
-            // hsync_r <= 1'b0;
-            // vsync_r <= 1'b0;
-            // display_on_r <= 1'b0;
+            hsync_r <= 1'b0;
+            vsync_r <= 1'b0;
+            vsync_r_r <= 1'b0;
+            hsync_r_r <= 1'b0;
+            display_on_r <= 1'b0;
+            display_on_r_r <= 1'b0;
         end else begin
-            // vsync_r <= vsync;
-            // hsync_r <= hsync;
-            // display_on_r <= display_on;
+            vsync_r <= vsync;
+            hsync_r <= hsync;
+            vsync_r_r <= vsync_r;
+            hsync_r_r <= hsync_r;
+            display_on_r <= display_on;
+            display_on_r_r <= display_on_r;
         end
     end
 
     always @(*) begin
-       o_hsync = hsync;
-       o_vsync = vsync;
+       o_hsync = hsync_r_r;
+       o_vsync = vsync_r_r;
     end
 
     always @(*) begin
@@ -93,10 +101,10 @@ module graphics_top #(parameter CONV = 0)(
         o_green = 2'b00;
 
         // DEBUG remove after
-        if (~display_on) begin
-          o_blue = 2'b11;
+        if (~display_on_r_r) begin
+          o_blue = 2'b00;
           o_red = 2'b00;
-          o_green = 2'b10;
+          o_green = 2'b00;
         end else if (is_colored_r) begin
             o_blue = 2'b11;
             o_red = 2'b11;
@@ -109,18 +117,20 @@ module graphics_top #(parameter CONV = 0)(
     // TODO probably can merge game_tick_r logic with frame_counter
     reg [1:0] frame_counter;
     reg game_tick_r;
+    reg collision;
 
     always @(*) begin
         o_game_tick_60hz = (vpos == 0) && (hpos == 0);
         o_game_tick_20hz = frame_counter == 1 && o_game_tick_60hz;
         o_game_tick_20hz_r = game_tick_r;
-        o_collision = i_color_obstacle && i_color_player;
+        o_collision = collision;
     end
 
     always @(posedge clk) begin
         if (rst) begin
             frame_counter <= 0; 
             game_tick_r <= 0;
+            collision <= 0;
         end else begin
             if (o_game_tick_60hz) begin
                 frame_counter <= frame_counter + 1; 
@@ -129,6 +139,11 @@ module graphics_top #(parameter CONV = 0)(
                 end
             end
             game_tick_r <= o_game_tick_20hz;
+            if (i_game_start_pulse) begin
+                collision <= 1'b0;
+            end else if (i_color_obstacle && i_color_player && display_on_r) begin
+                collision <= 1'b1;
+            end
         end
     end
 
