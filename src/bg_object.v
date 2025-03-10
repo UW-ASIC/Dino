@@ -3,7 +3,7 @@ module bg_object
 (
     input wire clk,
     input wire rst_n,
-    input  wire game_tick,      // 60 Hz. end of frame pulse
+    input  wire game_tick,      // 20 Hz
     input wire [7:0] rng,
     output reg [9:CONV] bg_object_pos
 );

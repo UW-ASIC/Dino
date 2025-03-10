@@ -93,9 +93,9 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     );
 
     bg_object #(.CONV(CONV)) bg_object_inst (
-        .clk(game_tick_60hz),
+        .clk(clk),
         .rst_n(rst_n),
-        .game_tick(game_tick_60hz),
+        .game_tick(game_tick_20hz[0]),
         .rng(rng),
         .bg_object_pos(bg_object_pos)
     );
