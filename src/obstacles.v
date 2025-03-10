@@ -5,6 +5,7 @@ module obstacles
     input wire rst_n,
     input wire game_frozen,
     input wire game_start,
+    input wire game_tick,
     input wire [7:0] rng,
     output reg [9:CONV] obstacle1_pos,
     output reg [9:CONV] obstacle2_pos,
@@ -22,7 +23,7 @@ module obstacles
             obstacle1_cross_gen_line_reg <= 0;
             obstacle2_cross_gen_line_reg <= 1;
         end else begin
-            if (!game_frozen) begin
+          if (!game_frozen && game_tick) begin
                 if (obstacle1_pos != 0) obstacle1_pos <= obstacle1_pos - 1;
                 if (obstacle2_pos != 0) obstacle2_pos <= obstacle2_pos - 1;
                 
