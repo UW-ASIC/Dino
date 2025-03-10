@@ -27,6 +27,15 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire gamepad_up;
     wire gamepad_down;
     wire gamepad_start;   // Can leverage start, select from SNES
+    wire gamepad_b;
+    wire gamepad_y;
+    wire gamepad_select;
+    wire gamepad_left;
+    wire gamepad_right;
+    wire gamepad_a;
+    wire gamepad_x;
+    wire gamepad_l;
+    wire gamepad_r;
 
     // Synchronizes pmod_data, pmod_clk, pmod_latch signals to system clock
     // domain.
@@ -42,7 +51,16 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .is_present(gamepad_is_present),
         .up(gamepad_up),
         .down(gamepad_down),
-        .start(gamepad_start)
+        .start(gamepad_start),
+        .b(gamepad_b),
+        .y(gamepad_y),
+        .select(gamepad_select),
+        .left(gamepad_left),
+        .right(gamepad_right),
+        .a(gamepad_a),
+        .x(gamepad_x),
+        .l(gamepad_l),
+        .r(gamepad_r)
     );
 
     // GAME STATE SIGNALS
@@ -240,6 +258,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     assign uio_oe  = 8'b10000000;
 
     // List all unused inputs to prevent warnings
-    wire _unused = &{ena, ui_in[7], ui_in[3:0], uio_in, 1'b0};
+ wire _unused = &{ena, ui_in[7], ui_in[3:0], uio_in, gamepad_start, gamepad_b, gamepad_y, gamepad_select, gamepad_left, gamepad_right, gamepad_a, gamepad_x, gamepad_l, gamepad_r, 1'b0};
 
 endmodule
