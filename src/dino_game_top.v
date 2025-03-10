@@ -77,7 +77,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .game_state(game_state)
     );
 
-    obstacles #(.GEN_LINE(70), .CONV(CONV)) obstacles_inst (
+ obstacles #(.GEN_LINE(71), .CONV(CONV)) obstacles_inst (
         .clk(clk),
         .rst_n(rst_n),
         .game_frozen(game_frozen),
