@@ -3,6 +3,7 @@ module bg_object
 (
     input wire clk,
     input wire rst_n,
+    input  wire game_tick,      // 60 Hz. end of frame pulse
     input wire [7:0] rng,
     output reg [9:CONV] bg_object_pos
 );
@@ -11,9 +12,11 @@ module bg_object
         if (!rst_n) begin
             bg_object_pos <= 0;
         end else begin
-            if (bg_object_pos != 0) bg_object_pos <= bg_object_pos - 1;
-            if (bg_object_pos == 0) begin
-                bg_object_pos <= {{(5-CONV){1'b1}}, rng[6:2]};
+            if (game_tick) begin
+                if (bg_object_pos != 0) bg_object_pos <= bg_object_pos - 1;
+                if (bg_object_pos == 0) begin
+                    bg_object_pos <= {{(5-CONV){1'b1}}, rng[6:2]};
+                end
             end
         end
     end

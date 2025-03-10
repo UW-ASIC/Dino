@@ -92,6 +92,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     bg_object #(.CONV(CONV)) bg_object_inst (
         .clk(game_tick_60hz),
         .rst_n(rst_n),
+        .game_tick(game_tick_60hz),
         .rng(rng),
         .bg_object_pos(bg_object_pos)
     );
@@ -239,7 +240,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     ScoreModule score_module_inst (
         .game_start(game_start_pulse),     
         .game_frozen(game_frozen),      
-        .game_tick(game_tick_60hz),     
+        .game_tick(game_tick_20hz[0]),     
         .clk(clk),            // clock
         .rst_n(rst_n),          // reset_n - low to reset
         .score(score)    
