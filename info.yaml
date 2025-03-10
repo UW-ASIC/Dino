@@ -18,6 +18,10 @@ project:
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
     - "audio_interface.v"
+    - "bg_line.v"
+    - "bg_object.v"
+    - "bg_object_rom.v"
+    - "bg_render.v"
     - "debounce.v"
     - "dino_game_top.v"
     - "dino_render.v"
