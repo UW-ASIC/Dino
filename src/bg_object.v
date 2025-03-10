@@ -7,7 +7,6 @@ module bg_object
     input wire [7:0] rng,
     output reg [9:CONV] bg_object_pos
 );
-    reg bg_object_cross_gen_line_reg;
     always @(posedge clk) begin
         if (!rst_n) begin
             bg_object_pos <= 0;

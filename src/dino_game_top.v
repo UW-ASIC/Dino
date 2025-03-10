@@ -213,9 +213,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .i_xpos(bg_object_pos)
     );
     bg_line #(.CONV(CONV), .GND_LINE(59)) bg_line_inst (
-        .clk(clk),
-        .rst(~rst_n),
-        .i_hpos(hpos),
         .i_vpos(vpos),
         .o_color_bg(color_bg_line)
     );
