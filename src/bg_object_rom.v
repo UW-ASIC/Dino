@@ -21,7 +21,7 @@ always @(posedge clk) begin
   if (rst) begin
     icon_cloud[0]  <= 8'b00000000;
     icon_cloud[1]  <= 8'b00000000;
-    icon_cloud[2]  <= 8'b11001100;
+    icon_cloud[2]  <= 8'b00001100;
     icon_cloud[3]  <= 8'b00011110;
     icon_cloud[4]  <= 8'b01101011;
     icon_cloud[5]  <= 8'b11000001;
