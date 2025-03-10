@@ -258,6 +258,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     assign uio_oe  = 8'b10000000;
 
     // List all unused inputs to prevent warnings
- wire _unused = &{ena, ui_in[7], ui_in[3:0], uio_in, gamepad_start, gamepad_b, gamepad_y, gamepad_select, gamepad_left, gamepad_right, gamepad_a, gamepad_x, gamepad_l, gamepad_r, 1'b0};
+ wire _unused = &{ena, ui_in[7], ui_in[3:0], uio_in, gamepad_start, gamepad_b, gamepad_y, gamepad_select, gamepad_left, gamepad_right, gamepad_a, gamepad_x, gamepad_l, gamepad_r, gamepad_is_present, 1'b0};
 
 endmodule
