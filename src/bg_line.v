@@ -1,5 +1,3 @@
-`default_nettype none
-
 module bg_line #(parameter CONV = 0, parameter GND_LINE = 0) (
   // Graphics
   input wire [9:CONV] i_vpos,
