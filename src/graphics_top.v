@@ -81,6 +81,9 @@ module graphics_top #(parameter CONV = 0)(
     end
 
     // ============== COMPARE =============
+    wire is_colored;
+    wire O0;
+    wire O1;
     priority_encoder_4_2 pe_4_2_inst (
         .I0(i_color_background),
         .I1(i_color_obstacle),
@@ -90,27 +93,10 @@ module graphics_top #(parameter CONV = 0)(
         .O1(O1),
         .V(is_colored)
     );
-    wire is_colored;
-    wire O0;
-    wire O1;
-    reg is_colored_r;
-    reg O0_r;
-    reg O1_r;
-    always @(posedge clk) begin
-        if (rst) begin
-            is_colored_r <= 0;
-            O0_r <= 0;
-            O1_r <= 0;
-        end else begin
-            is_colored_r <= is_colored;
-            O0_r <= O0;
-            O1_r <= O1;
-        end
-    end
-
     wire [1:0] R;
     wire [1:0] G;
     wire [1:0] B;
+    
     color_decoder_2_6 color_decoder_inst (
         .is_colored(is_colored_r),
         .layer({O1_r, O0_r}),
@@ -121,22 +107,38 @@ module graphics_top #(parameter CONV = 0)(
         .B(B)
     );
 
+    wire [1:0] R_r;
+    wire [1:0] G_r;
+    wire [1:0] B_r;
+    
+    always @(posedge clk) begin
+        if (rst) begin
+            R_r <= 0;
+            G_r <= 0;
+            B_r <= 0;
+        end else begin
+            R_r <= R;
+            G_r <= G;
+            B_r <= B;
+        end
+    end
+
     // ============ GENERATE RGB / TRANSFORM ============
     // TODO stage can be merged with "CONVOLUTION" stage
     always @(*) begin
-        o_blue = 2'b00;
         o_red  = 2'b00;
         o_green = 2'b00;
+        o_blue = 2'b00;
 
         // DEBUG remove after
         if (~display_on_r_r) begin
-            o_blue = 2'b00;
             o_red = 2'b00;
             o_green = 2'b00;
+            o_blue = 2'b00;
         end else begin
-            o_blue = B;
-            o_red = R;
-            o_green = G;
+            o_red = R_r;
+            o_green = G_r;
+            o_blue = B_r;
         end 
         
     end
