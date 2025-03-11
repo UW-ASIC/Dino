@@ -15,6 +15,9 @@ module graphics_top #(parameter CONV = 0)(
   input wire i_color_background,
   input wire i_color_score,
   input wire i_game_start_pulse,
+  
+  input wire i_rgb_scheme,
+  input wire i_invert,
 
   output reg o_game_tick_60hz,
   output reg o_game_tick_20hz,
@@ -98,18 +101,18 @@ module graphics_top #(parameter CONV = 0)(
     wire [1:0] B;
     
     color_decoder_2_6 color_decoder_inst (
-        .is_colored(is_colored_r),
-        .layer({O1_r, O0_r}),
-        .rgb_scheme(1'b0),
-        .invert(1'b0),
+        .is_colored(is_colored),
+        .layer({O1, O0}),
+        .rgb_scheme(i_rgb_scheme),
+        .invert(i_invert),
         .R(R),
         .G(G),
         .B(B)
     );
 
-    wire [1:0] R_r;
-    wire [1:0] G_r;
-    wire [1:0] B_r;
+    reg [1:0] R_r;
+    reg [1:0] G_r;
+    reg [1:0] B_r;
     
     always @(posedge clk) begin
         if (rst) begin
