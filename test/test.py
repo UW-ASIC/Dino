@@ -20,7 +20,7 @@ async def test_project(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 1000)
+    await ClockCycles(dut.clk, 1000000000)
     dut.rst_n.value = 1
 
     dut._log.info("Test project behavior")
