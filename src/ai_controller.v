@@ -30,12 +30,12 @@ always @(posedge clk) begin
     button_up <= 1'b0;
     button_down <= 1'b0;
     restart_counter <= 8'b00000000;
+  end else if (gamepad_is_present) begin
+    button_start <= gamepad_start;
+    button_up <= gamepad_up;
+    button_down <= gamepad_down;
   end else if (game_tick) begin
-    if (gamepad_is_present) begin
-      button_start <= gamepad_start;
-      button_up <= gamepad_up;
-      button_down <= gamepad_down;
-    end else if (crash | game_frozen) begin
+      if (crash | game_frozen) begin
       restart_counter <= restart_counter + 1;
       if (restart_counter == RESTART_DELAY) begin
         button_start <= 1'b1;
