@@ -36,7 +36,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire [2:0] obstacle1_type;
     wire [2:0] obstacle2_type;
 
-    wire [9:CONV] bg_object_pos /* verilator public */;
+    wire [9:CONV] bg_object_pos;
 
     wire [7:0] rng;
 
@@ -291,6 +291,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     ai_controller #(.CONV(CONV)) ai_controller_inst(
         .clk(clk),
         .rst_n(rst_n),
+        .game_tick(game_tick_60hz),
         .gamepad_is_present(gamepad_is_present),
         .gamepad_start(gamepad_start),
         .gamepad_up(gamepad_up | gamepad_a),

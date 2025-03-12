@@ -1,10 +1,11 @@
 `default_nettype none
 
 module ai_controller
-    #(    parameter CONV = 0, parameter GEN_LINE = 250, parameter PLAYER_OFFSET = 6, parameter OBSTACLE_TRESHOLD = 30 )
+    #(    parameter CONV = 0, parameter GEN_LINE = 250, parameter PLAYER_OFFSET = 6, parameter OBSTACLE_TRESHOLD = 40 )
 (
   input wire clk,
   input wire rst_n,
+  input wire game_tick,
   input wire gamepad_is_present,
   input wire gamepad_start,
   input wire gamepad_up,
@@ -29,13 +30,19 @@ always @(posedge clk) begin
     button_up <= 1'b0;
     button_down <= 1'b0;
     restart_counter <= 8'b00000000;
-  end else begin
+  end else if (game_tick) begin
     if (gamepad_is_present) begin
       button_start <= gamepad_start;
       button_up <= gamepad_up;
       button_down <= gamepad_down;
     end else if (crash | game_frozen) begin
-      button_start <= 1'b1;
+      restart_counter <= restart_counter + 1;
+      if (restart_counter == RESTART_DELAY) begin
+        button_start <= 1'b1;
+        restart_counter <= 8'b00000000;
+      end else begin
+        button_start <= 1'b0;
+      end
       button_up <= 1'b0;
       button_down <= 1'b0;
     end else if ((obstacle1_pos <= OBSTACLE_TRESHOLD && obstacle1_pos > PLAYER_OFFSET) || (obstacle2_pos <= OBSTACLE_TRESHOLD && obstacle2_pos > PLAYER_OFFSET)) begin
