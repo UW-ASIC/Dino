@@ -10,4 +10,4 @@ test/__pycache__/
 test/results.xml
 test/gate_level_netlist.v
 vga_sim/obj_dir
-src/all.v
+all.v
