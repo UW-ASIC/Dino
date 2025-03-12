@@ -5,6 +5,8 @@ module ai_controller
 (
   input clk,
   input rst_n,
+  input gamepad_is_present,
+  input gamepad_up,
   input [9:CONV] obstacle1_pos,
   input [9:CONV] obstacle2_pos,
   input crash,
@@ -23,20 +25,25 @@ always @(posedge clk) begin
     crash_out <= 1'b0;
     restart_counter <= 'b0;
   end else begin
-    if (crash_out) begin
-      restart_counter <= restart_counter + 1;
-      if (restart_counter == RESTART_DELAY) begin
-        crash_out <= 1'b0;
-        button_up <= 1'b1;
-        restart_counter <= 'b0;
-      end
-    end else if (crash) begin
-      crash_out <= 1'b1;
+    if (gamepad_is_present) begin
+      button_up <= gamepad_up;
+      crash_out <= crash;
     end else begin
-      if ((obstacle1_pos <= OBSTACLE_TRESHOLD && obstacle1_pos > PLAYER_OFFSET) || (obstacle2_pos <= OBSTACLE_TRESHOLD && obstacle2_pos > PLAYER_OFFSET)) begin
-        button_up <= 1'b1;
+      if (crash_out) begin
+        restart_counter <= restart_counter + 1;
+        if (restart_counter == RESTART_DELAY) begin
+          crash_out <= 1'b0;
+          button_up <= 1'b1;
+          restart_counter <= 'b0;
+        end
+      end else if (crash) begin
+        crash_out <= 1'b1;
       end else begin
-        button_up <= 1'b0;
+        if ((obstacle1_pos <= OBSTACLE_TRESHOLD && obstacle1_pos > PLAYER_OFFSET) || (obstacle2_pos <= OBSTACLE_TRESHOLD && obstacle2_pos > PLAYER_OFFSET)) begin
+          button_up <= 1'b1;
+        end else begin
+          button_up <= 1'b0;
+        end
       end
     end
   end

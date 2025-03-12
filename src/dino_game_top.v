@@ -20,27 +20,11 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
 
     wire debounce_countdown_en; // pulse on rising edge of 5th vpos bit
-    wire button_up; 
-    wire button_down = 0; 
 
-    // button_debounce button_up_debounce (
-    //     .clk(clk),
-    //     .rst_n(rst_n),
-    //     .countdown_en(debounce_countdown_en),
-    //     .button_in(ui_in[0]),
-    //     .button_out(button_up)
-    // );
-    
-    // button_debounce button_down_debounce (
-    //   .clk(clk),
-    //   .rst_n(rst_n),
-    //   .countdown_en(debounce_countdown_en),
-    //   .button_in(ui_in[1]),
-    //   .button_out(button_down)
-    // );
 
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
+    wire crash_out;
     wire [5:0] player_position;
     wire game_start_pulse;
     wire game_over_pulse;
@@ -95,7 +79,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .is_present(gamepad_is_present),
         .up(gamepad_up),
         .down(gamepad_down),
-        .start(gamepad_start),
+        .start(gamepad_up),
         .b(gamepad_b),
         .y(gamepad_y),
         .select(gamepad_select),
@@ -113,8 +97,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .game_tick(game_tick_20hz),
         .button_start(button_up),
         .button_up(button_up),
-        .button_down(button_down),
-        .crash(crash),
+        .button_down(gamepad_down),
+        .crash(crash_out),
         .player_position(player_position),
         .game_frozen(game_frozen),
         .game_start_pulse(game_start_pulse),
@@ -299,17 +283,11 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .sound(uio_out[7])
     );
 
-// input clk,
-//   input rst_n,
-//   input [9:CONV] obstacle1_pos,
-//   input [9:CONV] obstacle2_pos,
-//   input crash,
-//   output reg button_up,
-//   output reg crash_out
-
     ai_controller #(.CONV(CONV)) ai_controller_inst(
         .clk(clk),
         .rst_n(rst_n),
+        .gamepad_is_present(gamepad_is_present),
+        .gamepad_up(gamepad_up),
         .obstacle1_pos(obstacle1_pos),
         .obstacle2_pos(obstacle2_pos),
         .crash(crash),
@@ -325,7 +303,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     assign uio_oe  = 8'b10000000;
 
     // List all unused inputs to prevent warnings
-    wire _unused = &{ena, ui_in[7:2], uio_in, 1'b0, crash_out};
-    wire crash_out;
+    wire _unused = &{ena, ui_in[7:2], uio_in, 1'b0};
 
 endmodule
