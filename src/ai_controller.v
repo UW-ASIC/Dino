@@ -1,7 +1,7 @@
 `default_nettype none
 
 module ai_controller
-    #(    parameter CONV = 0, parameter GEN_LINE = 250, parameter PLAYER_OFFSET = 6, parameter OBSTACLE_TRESHOLD = 40 )
+    #(    parameter CONV = 0, parameter PLAYER_OFFSET = 6, parameter OBSTACLE_TRESHOLD = 40 )
 (
   input wire clk,
   input wire rst_n,
