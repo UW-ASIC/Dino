@@ -274,7 +274,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_game_tick_60hz(game_tick_60hz),
         .o_game_tick_20hz(game_tick_20hz[0]),
         .o_game_tick_20hz_r(game_tick_20hz[1]),
-        .o_vpos_5_r(debounce_countdown_en),
         .o_collision(crash)
     );
 
