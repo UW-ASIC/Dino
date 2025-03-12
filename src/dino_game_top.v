@@ -24,7 +24,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
 
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
-    wire crash_out;
     wire [5:0] player_position;
     wire game_start_pulse;
     wire game_over_pulse;
@@ -37,7 +36,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire [2:0] obstacle1_type;
     wire [2:0] obstacle2_type;
 
-    wire [9:CONV] bg_object_pos /* verilator public */;
+    wire [9:CONV] bg_object_pos;
 
     wire [7:0] rng;
 
@@ -65,6 +64,10 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire gamepad_l;
     wire gamepad_r;
 
+    wire button_start;
+    wire button_up;
+    wire button_down;
+
     // Synchronizes pmod_data, pmod_clk, pmod_latch signals to system clock
     // domain.
     gamepad_pmod_single gamepad_pmod (
@@ -79,7 +82,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .is_present(gamepad_is_present),
         .up(gamepad_up),
         .down(gamepad_down),
-        .start(gamepad_up),
+        .start(gamepad_start),
         .b(gamepad_b),
         .y(gamepad_y),
         .select(gamepad_select),
@@ -95,10 +98,10 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .clk(clk),
         .rst_n(rst_n),
         .game_tick(game_tick_20hz),
-        .button_start(button_up),
+        .button_start(button_start),
         .button_up(button_up),
-        .button_down(gamepad_down),
-        .crash(crash_out),
+        .button_down(button_down),
+        .crash(crash),
         .player_position(player_position),
         .game_frozen(game_frozen),
         .game_start_pulse(game_start_pulse),
@@ -259,6 +262,8 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .i_game_start_pulse(game_start_pulse),
         .o_hpos(hpos),
         .o_vpos(vpos),
+        .i_rgb_scheme(score[14]),
+        .i_invert(score[10]),
         .o_game_tick_60hz(game_tick_60hz),
         .o_game_tick_20hz(game_tick_20hz[0]),
         .o_game_tick_20hz_r(game_tick_20hz[1]),
@@ -286,13 +291,18 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     ai_controller #(.CONV(CONV)) ai_controller_inst(
         .clk(clk),
         .rst_n(rst_n),
+        .game_tick(game_tick_60hz),
         .gamepad_is_present(gamepad_is_present),
-        .gamepad_up(gamepad_up),
+        .gamepad_start(gamepad_start),
+        .gamepad_up(gamepad_up | gamepad_a),
+        .gamepad_down(gamepad_down | gamepad_b),
         .obstacle1_pos(obstacle1_pos),
         .obstacle2_pos(obstacle2_pos),
         .crash(crash),
+        .game_frozen(game_frozen),
+        .button_start(button_start),
         .button_up(button_up),
-        .crash_out(crash_out)
+        .button_down(button_down)
     );
   
     // TinyVGA PMOD

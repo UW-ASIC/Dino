@@ -5,7 +5,7 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = debounce.v dino_render.v dino_rom.v graphics_top.v hvsync_generator.v lfsr.v obs_render.v obs_rom.v obstacles.v player_controller.v player_physics.v dino_game_top.v render_top.v score.v score_render.v audio_interface.v jump_sound_player.v game_over_sound_player.v
+PROJECT_SOURCES = debounce.v dino_game_top.v dino_render.v dino_rom.v graphics_top.v hvsync_generator.v lfsr.v obs_render.v obs_rom.v obstacles.v player_controller.v player_physics.v score.v score_render.v audio_interface.v jump_sound_player.v game_over_sound_player.v bg_object.v bg_object_rom.v bg_render.v bg_line.v priority_encoder.v color_decoder.v ai_controller.v gamepad_pmod.v
 
 ifneq ($(GATES),yes)
 

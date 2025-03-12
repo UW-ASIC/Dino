@@ -1,5 +1,3 @@
-`default_nettype none
-
 module game_over_sound_player (
     input wire clk,        // 50 MHz clock input
     input wire rst_n,      // reset on the negative edge
@@ -27,15 +25,13 @@ module game_over_sound_player (
     localparam [18:0] DECAY_14 = 8076;
     localparam [18:0] DECAY_15 = 7300;
 
-    typedef enum logic [1:0] {
-        IDLE  = 2'b00,
-        PLAY1  = 2'b01,
-        PLAY2 = 2'b10,
-        DONE  = 2'b11
-    } state_t;
+    localparam [1:0] IDLE  = 2'b00,
+                    PLAY1 = 2'b01,
+                    PLAY2 = 2'b10,
+                    DONE  = 2'b11;
 
-    state_t state = IDLE;
-    state_t next_state = IDLE;
+    reg [1:0] state = IDLE;
+    reg [1:0] next_state = IDLE;
 
     reg [4:0] stage_index = 0;   // 16 stages of decay values
     reg [18:0] counter = 0;   // 19-bit counter for a maximum period of 333333

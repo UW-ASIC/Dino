@@ -1,18 +1,18 @@
 `default_nettype none
 
 module player_controller (
-  input clk,
-  input rst_n,
-  input [1:0] game_tick,
-  input button_start,
-  input button_up,
-  input button_down,
-  input crash,
-  output [5:0] player_position /*verilator public*/,
-  output game_frozen,
-  output game_start_pulse,
-  output game_over_pulse,
-  output jump_pulse,
+  input wire clk,
+  input wire rst_n,
+  input wire [1:0] game_tick,
+  input wire button_start,
+  input wire button_up,
+  input wire button_down,
+  input wire crash,
+  output wire [5:0] player_position,
+  output wire game_frozen,
+  output wire game_start_pulse,
+  output wire game_over_pulse,
+  output wire jump_pulse,
   output reg [2:0] game_state
 );
 
