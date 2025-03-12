@@ -141,11 +141,11 @@ always @(posedge clk) begin
     icon_bird_low[2]  <= 16'b0000000000000000;
     icon_bird_low[3]  <= 16'b0000000000000000;
     icon_bird_low[4]  <= 16'b0000000000000000;
-    icon_bird_low[5]  <= 16'b0000000110000000;
-    icon_bird_low[6]  <= 16'b0000000011000000;
-    icon_bird_low[7]  <= 16'b0000000111101100;
-    icon_bird_low[8]  <= 16'b0000101111101010;
-    icon_bird_low[9]  <= 16'b0000011111110110;
+    icon_bird_low[5]  <= 16'b0010100011001100;
+    icon_bird_low[6]  <= 16'b0001000100110010;
+    icon_bird_low[7]  <= 16'b0000001000010001;
+    icon_bird_low[8]  <= 16'b1010000000000000;
+    icon_bird_low[9]  <= 16'b0100000000000000;
     icon_bird_low[10] <= 16'b0000000000000000;
     icon_bird_low[11] <= 16'b0000000000000000;
     icon_bird_low[12] <= 16'b0000000000000000;
@@ -156,11 +156,11 @@ always @(posedge clk) begin
 end
 always @(posedge clk) begin
   if (rst) begin
-    icon_bird_high[0]  <= 16'b0000000110000000;
-    icon_bird_high[1]  <= 16'b0000000011000000;
-    icon_bird_high[2]  <= 16'b0000000111101100;
-    icon_bird_high[3]  <= 16'b0000101111101010;
-    icon_bird_high[4]  <= 16'b0000011111110110;
+    icon_bird_high[0]  <= 16'b0000000000000000;
+    icon_bird_high[1]  <= 16'b0000011001100000;
+    icon_bird_high[2]  <= 16'b0000100110010000;
+    icon_bird_high[3]  <= 16'b0001000010001000;
+    icon_bird_high[4]  <= 16'b0000000000000000;
     icon_bird_high[5]  <= 16'b0000000000000000;
     icon_bird_high[6]  <= 16'b0000000000000000;
     icon_bird_high[7]  <= 16'b0000000000000000;
