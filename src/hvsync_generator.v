@@ -9,15 +9,14 @@ To use:
 - Add a 3-bit (or more) "rgb" output to the top level
 */
 
-module hvsync_generator(clk, reset, hsync, vsync, display_on, hpos, vpos);
-
-  input clk;
-  input reset;
-  output reg hsync, vsync;
-  output display_on;
-  output reg [9:0] hpos;
-  output reg [9:0] vpos;
-
+module hvsync_generator(
+  input wire clk,
+  input wire reset,
+  output wire hsync, vsync,
+  output wire display_on,
+  output reg [9:0] hpos,
+  output reg [9:0] vpos
+);
   // declarations for TV-simulator sync parameters
   // horizontal constants
   parameter H_DISPLAY       = 640; // horizontal display width

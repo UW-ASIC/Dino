@@ -27,13 +27,13 @@ module graphics_top #(parameter CONV = 0)(
 );
     // ============== HVSYNC =============
     // TODO can change hpos to increment by 2 to reduce bits
-    reg [9:0] hpos;
-    reg [9:0] vpos;
+    wire [9:0] hpos;
+    wire [9:0] vpos;
     reg vpos_5_r;
-    reg display_on;
+    wire display_on;
     // TODO can remove this pipeline stage if we don't need it
-    reg hsync;
-    reg vsync;
+    wire hsync;
+    wire vsync;
     reg hsync_r;
     reg vsync_r;
     reg hsync_r_r;

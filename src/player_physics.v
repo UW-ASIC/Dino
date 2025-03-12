@@ -6,12 +6,12 @@ module player_physics #(
   parameter DOWNWARD_ACCELERATION =  1,
   parameter FASTDROP_VELOCITY     =  6
 ) (
-  input clk,
-  input rst_n,
-  input [1:0] game_tick,     // enable for the FF that stores result of velocity [0] and position [1]
-  input game_over,           // collision has occured -- freeze dino
-  input jump_pulse,          // high for one clock cycle at start of jump (set initial velocity)
-  input button_down,         // high if down button is pressed
+  input wire clk,
+  input wire rst_n,
+  input wire [1:0] game_tick,     // enable for the FF that stores result of velocity [0] and position [1]
+  input wire game_over,           // collision has occured -- freeze dino
+  input wire jump_pulse,          // high for one clock cycle at start of jump (set initial velocity)
+  input wire button_down,         // high if down button is pressed
   output reg [5:0] position, // -21..4
   output wire jump_done      // not(msb of adder) -- only sampled when game_tick[1] == 1
 );

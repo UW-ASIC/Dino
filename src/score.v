@@ -11,7 +11,7 @@ module ScoreModule (
     input  wire              game_tick,      // 60 Hz. end of frame pulse
     input  wire              clk,            // clock
     input  wire              rst_n,          // reset_n - low to reset
-    output reg [15:0]        score
+    output wire [15:0]       score
 );
 
   // Internal registers to help with keeping track of the score in decimal

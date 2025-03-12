@@ -6,7 +6,7 @@ module lfsr
 (
   input wire clk,
   input wire enable,
-  output [NUM_BITS-1:0] lfsr_data
+  output wire [NUM_BITS-1:0] lfsr_data
 );
   reg [NUM_BITS:1] r_lfsr = {NUM_BITS/2{2'b01}}; // 010101 ...
   wire r_xnor;
