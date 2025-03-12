@@ -298,6 +298,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .obstacle1_pos(obstacle1_pos),
         .obstacle2_pos(obstacle2_pos),
         .crash(crash),
+        .game_frozen(game_frozen),
         .button_start(button_start),
         .button_up(button_up),
         .button_down(button_down)

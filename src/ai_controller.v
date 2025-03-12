@@ -12,6 +12,7 @@ module ai_controller
   input wire [9:CONV] obstacle1_pos,
   input wire [9:CONV] obstacle2_pos,
   input wire crash,
+  input wire game_frozen,
   output reg button_start,
   output reg button_up,
   output reg button_down
@@ -33,7 +34,7 @@ always @(posedge clk) begin
       button_start <= gamepad_start;
       button_up <= gamepad_up;
       button_down <= gamepad_down;
-    end else if (crash) begin
+    end else if (crash | game_frozen) begin
       button_start <= 1'b1;
       button_up <= 1'b0;
       button_down <= 1'b0;
