@@ -11,11 +11,11 @@ module ScoreModule (
     input  wire              game_tick,      // 60 Hz. end of frame pulse
     input  wire              clk,            // clock
     input  wire              rst_n,          // reset_n - low to reset
-    output wire [15:0]       score
+    output wire [19:0]       score
 );
 
   // Internal registers to help with keeping track of the score in decimal
-  reg [3:0] score_int [3:0];
+  reg [3:0] score_int [4:0];
 
   // determine if game_active
   always @(posedge clk) begin
@@ -24,6 +24,7 @@ module ScoreModule (
       score_int[1] <= 0;
       score_int[2] <= 0;
       score_int[3] <= 0;
+      score_int[4] <= 0;
     end else begin
       
       if (!game_frozen && game_tick) begin
@@ -31,8 +32,13 @@ module ScoreModule (
           if (score_int[1] == 9) begin
             if (score_int[2] == 9) begin
               if (score_int[3] == 9) begin
-                // Reset the game if the score gets to 9999
-                score_int[3] <= 0;
+                if (score_int[4] == 9) begin
+                  // Reset the game if the score gets to 99999
+                  score_int[4] <= 0;
+                end else begin
+                  score_int[4] <= score_int[3] + 1;
+                  score_int[3] <= 0;
+                end
               end else begin
                 score_int[3] <= score_int[3] + 1;
                 score_int[2] <= 0;
@@ -53,6 +59,6 @@ module ScoreModule (
     end
   end
   
-  assign score = {score_int[3], score_int[2], score_int[1], score_int[0]};
+  assign score = {score_int[4], score_int[3], score_int[2], score_int[1], score_int[0]};
 
 endmodule
