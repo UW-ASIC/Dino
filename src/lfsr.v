@@ -6,9 +6,10 @@ module lfsr
 (
   input wire clk,
   input wire enable,
-  output wire [NUM_BITS-1:0] lfsr_data
+  output wire [7:0] lfsr_data
 );
-  reg [NUM_BITS:1] r_lfsr = {NUM_BITS/2{2'b01}}; // 010101 ...
+  // reg [NUM_BITS:1] r_lfsr = {NUM_BITS/2{2'b01}}; // 010101 ...
+  reg [NUM_BITS:1] r_lfsr = 15'b0101010101010101; // 010101 ...
   wire r_xnor;
 
   // Create Feedback Polynomials.  Based on Application Note:
@@ -20,15 +21,15 @@ module lfsr
       5: begin : gen_poly assign r_xnor = r_lfsr[5] ^~ r_lfsr[3]; end
       6: begin : gen_poly assign r_xnor = r_lfsr[6] ^~ r_lfsr[5]; end
       7: begin : gen_poly assign r_xnor = r_lfsr[7] ^~ r_lfsr[6]; end
-      8: begin : gen_poly assign r_xnor = r_lfsr[8] ^~ r_lfsr[6] ^~ r_lfsr[5] ^~ r_lfsr[4]; end
+      8: begin : gen_poly assign r_xnor = ~(r_lfsr[8] ^ r_lfsr[6] ^ r_lfsr[5] ^ r_lfsr[4]); end
       9: begin : gen_poly assign r_xnor = r_lfsr[9] ^~ r_lfsr[5]; end
       10: begin : gen_poly assign r_xnor = r_lfsr[10] ^~ r_lfsr[7]; end
       11: begin : gen_poly assign r_xnor = r_lfsr[11] ^~ r_lfsr[9]; end
-      12: begin : gen_poly assign r_xnor = r_lfsr[12] ^~ r_lfsr[6] ^~ r_lfsr[4] ^~ r_lfsr[1]; end
-      13: begin : gen_poly assign r_xnor = r_lfsr[13] ^~ r_lfsr[4] ^~ r_lfsr[3] ^~ r_lfsr[1]; end
-      14: begin : gen_poly assign r_xnor = r_lfsr[14] ^~ r_lfsr[5] ^~ r_lfsr[3] ^~ r_lfsr[1]; end
+      12: begin : gen_poly assign r_xnor = ~(r_lfsr[12] ^ r_lfsr[6] ^ r_lfsr[4] ^ r_lfsr[1]); end
+      13: begin : gen_poly assign r_xnor = ~(r_lfsr[13] ^ r_lfsr[4] ^ r_lfsr[3] ^ r_lfsr[1]); end
+      14: begin : gen_poly assign r_xnor = ~(r_lfsr[14] ^ r_lfsr[5] ^ r_lfsr[3] ^ r_lfsr[1]); end
       15: begin : gen_poly assign r_xnor = r_lfsr[15] ^~ r_lfsr[14]; end
-      16: begin : gen_poly assign r_xnor = r_lfsr[16] ^~ r_lfsr[15] ^~ r_lfsr[13] ^~ r_lfsr[4]; end
+      16: begin : gen_poly assign r_xnor = ~(r_lfsr[16] ^ r_lfsr[15] ^ r_lfsr[13] ^ r_lfsr[4]); end
     endcase // case (NUM_BITS)
   endgenerate
 
@@ -36,9 +37,9 @@ module lfsr
     if (enable == 1'b1)
       r_lfsr <= {r_lfsr[NUM_BITS-1:1], r_xnor};
     else
-      r_lfsr <= {NUM_BITS/2{2'b01}};
+      r_lfsr <= 15'b0101010101010101;
   end
 
-  assign lfsr_data = r_lfsr[NUM_BITS:1];
+  assign lfsr_data = r_lfsr[8:1];
 endmodule
 

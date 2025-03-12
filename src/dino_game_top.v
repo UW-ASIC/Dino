@@ -37,7 +37,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
 
     wire [7:0] rng;
 
-    lfsr #(.NUM_BITS(8)) lfsr_inst (
+    lfsr #(.NUM_BITS(15)) lfsr_inst (
         .clk(clk),
         .enable(ena),
         .lfsr_data(rng)
