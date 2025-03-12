@@ -63,6 +63,50 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .lfsr_data(rng)
     );
 
+    // Gamepad Pmod support
+    wire gamepad_pmod_latch = ui_in[4];
+    wire gamepad_pmod_clk = ui_in[5];
+    wire gamepad_pmod_data = ui_in[6];
+    wire gamepad_is_present;  // HIGH when gamepad is connected
+    wire gamepad_up;
+    wire gamepad_down;
+    wire gamepad_start;   // Can leverage start, select from SNES
+    wire gamepad_b;
+    wire gamepad_y;
+    wire gamepad_select;
+    wire gamepad_left;
+    wire gamepad_right;
+    wire gamepad_a;
+    wire gamepad_x;
+    wire gamepad_l;
+    wire gamepad_r;
+
+    // Synchronizes pmod_data, pmod_clk, pmod_latch signals to system clock
+    // domain.
+    gamepad_pmod_single gamepad_pmod (
+        // Inputs:
+        .clk(clk),
+        .rst_n(rst_n),
+        .pmod_latch(gamepad_pmod_latch),
+        .pmod_clk(gamepad_pmod_clk),
+        .pmod_data(gamepad_pmod_data),
+
+        // Outputs:
+        .is_present(gamepad_is_present),
+        .up(gamepad_up),
+        .down(gamepad_down),
+        .start(gamepad_start),
+        .b(gamepad_b),
+        .y(gamepad_y),
+        .select(gamepad_select),
+        .left(gamepad_left),
+        .right(gamepad_right),
+        .a(gamepad_a),
+        .x(gamepad_x),
+        .l(gamepad_l),
+        .r(gamepad_r)
+    );
+
     player_controller player_constroller_inst (
         .clk(clk),
         .rst_n(rst_n),
@@ -79,7 +123,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .game_state(game_state)
     );
 
- obstacles #(.GEN_LINE(71), .CONV(CONV)) obstacles_inst (
+    obstacles #(.GEN_LINE(71), .CONV(CONV)) obstacles_inst (
         .clk(clk),
         .rst_n(rst_n),
         .game_frozen(game_frozen),
