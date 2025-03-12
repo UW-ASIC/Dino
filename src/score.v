@@ -29,27 +29,27 @@ module ScoreModule (
       
       if (!game_frozen && game_tick) begin
         if (score_int[0] == 9) begin
+          score_int[0] <= 0;
           if (score_int[1] == 9) begin
+            score_int[1] <= 0;
             if (score_int[2] == 9) begin
+              score_int[2] <= 0;
               if (score_int[3] == 9) begin
+                score_int[3] <= 0;
                 if (score_int[4] == 9) begin
                   // Reset the game if the score gets to 99999
                   score_int[4] <= 0;
                 end else begin
                   score_int[4] <= score_int[4] + 1;
-                  score_int[3] <= 0;
                 end
               end else begin
                 score_int[3] <= score_int[3] + 1;
-                score_int[2] <= 0;
               end
             end else begin
               score_int[2] <= score_int[2] + 1;
-              score_int[1] <= 0;
             end
           end else begin
             score_int[1] <= score_int[1] + 1;
-            score_int[0] <= 0;
           end
         end else begin
           score_int[0] <= score_int[0] + 1;
