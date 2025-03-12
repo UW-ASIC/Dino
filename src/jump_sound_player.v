@@ -41,14 +41,11 @@ module jump_sound_player (
     localparam [18:0] DECAY_30 = 19'd25;
 
     // State machine states
-    typedef enum logic [1:0] {
-        IDLE  = 2'b00,
-        PLAY  = 2'b01,
-        DONE  = 2'b10
-    } state_t;
-
-    state_t state = IDLE;
-    state_t next_state = IDLE;
+    localparam [1:0] IDLE  = 2'b00,
+                 PLAY   = 2'b01,
+                 DONE   = 2'b10;
+    reg [1:0] state = IDLE;
+    reg [1:0] next_state = IDLE;
     
     reg [4:0]  stage_index = 0;  // Decay stage index
     reg [18:0] counter     = 0;  // PWM period counter
