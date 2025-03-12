@@ -19,9 +19,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire       game_tick_60hz;
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
 
-    wire debounce_countdown_en; // pulse on rising edge of 5th vpos bit
-
-
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
     wire [5:0] player_position;
@@ -323,6 +320,6 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     assign uio_oe  = 8'b10000000;
 
     // List all unused inputs to prevent warnings
-    wire _unused = &{ena, ui_in[7:2], uio_in, 1'b0};
+    wire _unused = &{ena, ui_in[7], ui_in[3:0], uio_in, gamepad_start, gamepad_b, gamepad_y, gamepad_select, gamepad_left, gamepad_right, gamepad_a, gamepad_x, gamepad_l, gamepad_r, gamepad_is_present, 1'b0};
 
 endmodule
