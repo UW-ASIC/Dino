@@ -1,7 +1,9 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2025 UW ASIC
  * SPDX-License-Identifier: Apache-2.0
  */
+
+`default_nettype none 
  
 module top_dino #(parameter CONV = 2) (
     input  wire [7:0] ui_in,    // Dedicated inputs
@@ -18,32 +20,17 @@ module top_dino #(parameter CONV = 2) (
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
 
     wire debounce_countdown_en; // pulse on rising edge of 5th vpos bit
-    wire button_up; 
-    wire button_down; 
-
-    button_debounce button_up_debounce (
-        .clk(clk),
-        .rst_n(rst_n),
-        .countdown_en(debounce_countdown_en),
-        .button_in(ui_in[0]),
-        .button_out(button_up)
-    );
-    
-    button_debounce button_down_debounce (
-      .clk(clk),
-      .rst_n(rst_n),
-      .countdown_en(debounce_countdown_en),
-      .button_in(ui_in[1]),
-      .button_out(button_down)
-    );
 
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
+    wire crash_out;
     wire [5:0] player_position;
     wire game_start_pulse;
     wire game_over_pulse;
     wire game_frozen;
     wire jump_pulse;
+    wire button_up;
+    wire button_start;
     wire [2:0] game_state;
 
     wire [9:CONV] obstacle1_pos;
@@ -61,23 +48,58 @@ module top_dino #(parameter CONV = 2) (
         .lfsr_data(rng)
     );
 
-    ai_controller #(.CONV(2)) ai_controller_inst (
+    // Gamepad Pmod support
+    wire gamepad_pmod_latch = ui_in[4];
+    wire gamepad_pmod_clk = ui_in[5];
+    wire gamepad_pmod_data = ui_in[6];
+    wire gamepad_is_present;  // HIGH when gamepad is connected
+    wire gamepad_up;
+    wire gamepad_down;
+    wire gamepad_start;   // Can leverage start, select from SNES
+    wire gamepad_b;
+    wire gamepad_y;
+    wire gamepad_select;
+    wire gamepad_left;
+    wire gamepad_right;
+    wire gamepad_a;
+    wire gamepad_x;
+    wire gamepad_l;
+    wire gamepad_r;
+
+    // Synchronizes pmod_data, pmod_clk, pmod_latch signals to system
+    // clock domain.
+    gamepad_pmod_single gamepad_pmod (
+        // Inputs:
         .clk(clk),
         .rst_n(rst_n),
-        .obstacle1_pos(obstacle1_pos),
-        .obstacle2_pos(obstacle2_pos),
-        .crash(crash),
-        .button_up(button_up)
+        .pmod_latch(gamepad_pmod_latch),
+        .pmod_clk(gamepad_pmod_clk),
+        .pmod_data(gamepad_pmod_data),
+
+        // Outputs:
+        .is_present(gamepad_is_present),
+        .up(gamepad_up),
+        .down(gamepad_down),
+        .start(gamepad_up),
+        .b(gamepad_b),
+        .y(gamepad_y),
+        .select(gamepad_select),
+        .left(gamepad_left),
+        .right(gamepad_right),
+        .a(gamepad_a),
+        .x(gamepad_x),
+        .l(gamepad_l),
+        .r(gamepad_r)
     );
 
     player_controller player_constroller_inst (
         .clk(clk),
         .rst_n(rst_n),
         .game_tick(game_tick_20hz),
-        .button_start(button_up),
+        .button_start(button_start),
         .button_up(button_up),
-        .button_down(button_down),
-        .crash(crash),
+        .button_down(gamepad_down),
+        .crash(crash_out),
         .player_position(player_position),
         .game_frozen(game_frozen),
         .game_start_pulse(game_start_pulse),
@@ -208,7 +230,7 @@ module top_dino #(parameter CONV = 2) (
         .i_sprite_color(obs_color_2),
         .i_xpos(obstacle2_pos)
     );
-    
+
     bg_render #(.CONV(CONV)) bg_render_inst  (
         .clk(clk),
         .rst(~rst_n),
@@ -248,7 +270,7 @@ module top_dino #(parameter CONV = 2) (
     ScoreModule score_module_inst (
         .game_start(game_start_pulse),     
         .game_frozen(game_frozen),      
-        .game_tick(game_tick_20hz[0]),     
+        .game_tick(game_tick_60hz),     
         .clk(clk),            // clock
         .rst_n(rst_n),          // reset_n - low to reset
         .score(score)    
@@ -261,6 +283,19 @@ module top_dino #(parameter CONV = 2) (
         .jump_pulse(jump_pulse),
         .sound(uio_out[7])
     );
+
+    ai_controller #(.CONV(CONV)) ai_controller_inst(
+        .clk(clk),
+        .rst_n(rst_n),
+        .gamepad_is_present(gamepad_is_present),
+        .gamepad_up(gamepad_up),
+        .obstacle1_pos(obstacle1_pos),
+        .obstacle2_pos(obstacle2_pos),
+        .crash(crash),
+        .button_start(button_start),
+        .button_up(button_up),
+        .crash_out(crash_out)
+    );
   
     // TinyVGA PMOD
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
@@ -271,4 +306,5 @@ module top_dino #(parameter CONV = 2) (
 
     // List all unused inputs to prevent warnings
     wire _unused = &{ena, ui_in[7:2], uio_in, 1'b0};
-  endmodule
+
+endmodule
