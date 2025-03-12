@@ -13,7 +13,7 @@ module player_controller (
   output game_start_pulse,
   output game_over_pulse,
   output jump_pulse,
-  output reg [2:0] game_state /*verilator public*/
+  output reg [2:0] game_state
 );
 
   localparam RESTART   = 3'b000;

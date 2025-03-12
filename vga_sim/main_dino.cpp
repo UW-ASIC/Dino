@@ -195,7 +195,7 @@ int main(int argc, char* argv[]) {
     uint64_t frame_count = 0;
 
 
-
+    /*
     // https://verilator.org/guide/latest/connecting.html#vpi-example
     // get handle to game_state signal
     vpiHandle game_state_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.player_constroller_inst.game_state", NULL);
@@ -242,13 +242,24 @@ int main(int argc, char* argv[]) {
     s_vpi_value obstacle2_pos_val;
     obstacle2_pos_val.format = vpiIntVal;
 
-    int obstacle2_pos_old = -1;
+    int obstacle2_pos_old = -1; 
 
+    // get handle to obs_pos_1 signal
+    vpiHandle bg_object_pos_vh = vpi_handle_by_name((PLI_BYTE8*)"TOP.top_dino.top.bg_object_pos", NULL);
+    if (!bg_object_pos_vh) vl_fatal(__FILE__, __LINE__, "sim_main", "No handle found");
+    const char* bg_object_pos_name = vpi_get_str(vpiName, bg_object_pos_vh);
+    const char* bg_object_pos_type = vpi_get_str(vpiType, bg_object_pos_vh);
+    const int bg_object_pos_size = vpi_get(vpiSize, bg_object_pos_vh);
+    printf("register name: %s, type: %s, size: %d\n", bg_object_pos_name, bg_object_pos_type, bg_object_pos_size); 
+    s_vpi_value bg_object_pos_val;
+    bg_object_pos_val.format = vpiIntVal;
 
+    int bg_object_pos_old = -1;
+    */
     long long clk_count = 0;
     // main loop
     while (running) {
-
+        /*
         vpi_get_value(game_state_vh, &game_state_val);
 
         if (game_state_val.value.integer != game_state_val_old) {
@@ -277,6 +288,14 @@ int main(int argc, char* argv[]) {
             printf("obstacle2_pos value: %d, clock: %lld\n", obstacle2_pos_old, clk_count);
         }
 
+        vpi_get_value(bg_object_pos_vh, &bg_object_pos_val);
+
+        if (bg_object_pos_val.value.integer != bg_object_pos_old) {
+            bg_object_pos_old = bg_object_pos_val.value.integer;
+            printf("bg_object_pos value: %d, clock: %lld\n", bg_object_pos_old, clk_count);
+        }
+        */
+        
         // cycle the clock
         top->clk = 1;
         top->eval();
