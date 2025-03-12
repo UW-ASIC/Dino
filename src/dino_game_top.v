@@ -20,27 +20,11 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     wire [1:0] game_tick_20hz; // two consecutive pulses generated ([0] and then [1]), enabling pipelining
 
     wire debounce_countdown_en; // pulse on rising edge of 5th vpos bit
-    wire button_up; 
-    wire button_down; 
 
-    button_debounce button_up_debounce (
-        .clk(clk),
-        .rst_n(rst_n),
-        .countdown_en(debounce_countdown_en),
-        .button_in(ui_in[0]),
-        .button_out(button_up)
-    );
-    
-    button_debounce button_down_debounce (
-      .clk(clk),
-      .rst_n(rst_n),
-      .countdown_en(debounce_countdown_en),
-      .button_in(ui_in[1]),
-      .button_out(button_down)
-    );
 
     // GAME STATE SIGNALS
     wire crash; // set to 1'b1 by rendering when collision occurs
+    wire crash_out;
     wire [5:0] player_position;
     wire game_start_pulse;
     wire game_over_pulse;
@@ -63,14 +47,58 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .lfsr_data(rng)
     );
 
+    // Gamepad Pmod support
+    wire gamepad_pmod_latch = ui_in[4];
+    wire gamepad_pmod_clk = ui_in[5];
+    wire gamepad_pmod_data = ui_in[6];
+    wire gamepad_is_present;  // HIGH when gamepad is connected
+    wire gamepad_up;
+    wire gamepad_down;
+    wire gamepad_start;   // Can leverage start, select from SNES
+    wire gamepad_b;
+    wire gamepad_y;
+    wire gamepad_select;
+    wire gamepad_left;
+    wire gamepad_right;
+    wire gamepad_a;
+    wire gamepad_x;
+    wire gamepad_l;
+    wire gamepad_r;
+
+    // Synchronizes pmod_data, pmod_clk, pmod_latch signals to system clock
+    // domain.
+    gamepad_pmod_single gamepad_pmod (
+        // Inputs:
+        .clk(clk),
+        .rst_n(rst_n),
+        .pmod_latch(gamepad_pmod_latch),
+        .pmod_clk(gamepad_pmod_clk),
+        .pmod_data(gamepad_pmod_data),
+
+        // Outputs:
+        .is_present(gamepad_is_present),
+        .up(gamepad_up),
+        .down(gamepad_down),
+        .start(gamepad_up),
+        .b(gamepad_b),
+        .y(gamepad_y),
+        .select(gamepad_select),
+        .left(gamepad_left),
+        .right(gamepad_right),
+        .a(gamepad_a),
+        .x(gamepad_x),
+        .l(gamepad_l),
+        .r(gamepad_r)
+    );
+
     player_controller player_constroller_inst (
         .clk(clk),
         .rst_n(rst_n),
         .game_tick(game_tick_20hz),
         .button_start(button_up),
         .button_up(button_up),
-        .button_down(button_down),
-        .crash(crash),
+        .button_down(gamepad_down),
+        .crash(crash_out),
         .player_position(player_position),
         .game_frozen(game_frozen),
         .game_start_pulse(game_start_pulse),
@@ -79,7 +107,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .game_state(game_state)
     );
 
- obstacles #(.GEN_LINE(71), .CONV(CONV)) obstacles_inst (
+    obstacles #(.GEN_LINE(71), .CONV(CONV)) obstacles_inst (
         .clk(clk),
         .rst_n(rst_n),
         .game_frozen(game_frozen),
@@ -243,7 +271,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
     ScoreModule score_module_inst (
         .game_start(game_start_pulse),     
         .game_frozen(game_frozen),      
-        .game_tick(game_tick_20hz[0]),     
+        .game_tick(game_tick_60hz),     
         .clk(clk),            // clock
         .rst_n(rst_n),          // reset_n - low to reset
         .score(score)    
@@ -255,6 +283,18 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .game_is_over(game_over_pulse),
         .jump_pulse(jump_pulse),
         .sound(uio_out[7])
+    );
+
+    ai_controller #(.CONV(CONV)) ai_controller_inst(
+        .clk(clk),
+        .rst_n(rst_n),
+        .gamepad_is_present(gamepad_is_present),
+        .gamepad_up(gamepad_up),
+        .obstacle1_pos(obstacle1_pos),
+        .obstacle2_pos(obstacle2_pos),
+        .crash(crash),
+        .button_up(button_up),
+        .crash_out(crash_out)
     );
   
     // TinyVGA PMOD
