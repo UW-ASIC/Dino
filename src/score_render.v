@@ -1,6 +1,6 @@
 `default_nettype none
 
-module score_render #(parameter CONV = 0, parameter OFFSET = 0) (
+module score_render #(parameter CONV = 0, parameter OFFSET = 0, parameter OFFSET_Y = 7) (
   input  wire       clk,     
   input  wire       rst, 
   input wire [3:0] num,
@@ -29,7 +29,7 @@ always @(posedge clk) begin
 end
 
 always @(*) begin
-  y_offset = i_vpos - 1;
+  y_offset = i_vpos - OFFSET_Y;
   x_offset = i_hpos - OFFSET;
 
   in_sprite = (x_offset_r < 4) && (y_offset_r < 7);

@@ -175,7 +175,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_score_color(score_color_1)
     );
 
-    score_render #(.CONV(CONV), .OFFSET(130)) score_inst_2 (
+    score_render #(.CONV(CONV), .OFFSET(133)) score_inst_2 (
         .clk(clk),
         .rst(~rst_n),
         .num(score[7:4]),
@@ -184,7 +184,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_score_color(score_color_2)
     );
 
-    score_render #(.CONV(CONV), .OFFSET(120)) score_inst_3 (
+    score_render #(.CONV(CONV), .OFFSET(126)) score_inst_3 (
         .clk(clk),
         .rst(~rst_n),
         .num(score[11:8]),
@@ -193,7 +193,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_score_color(score_color_3)
     );
 
-    score_render #(.CONV(CONV), .OFFSET(110)) score_inst_4 (
+    score_render #(.CONV(CONV), .OFFSET(119)) score_inst_4 (
         .clk(clk),
         .rst(~rst_n),
         .num(score[15:12]),
@@ -202,7 +202,7 @@ module tt_um_uwasic_dinogame #(parameter CONV = 2) (
         .o_score_color(score_color_4)
     );
 
-    score_render #(.CONV(CONV), .OFFSET(100)) score_inst_5 (
+    score_render #(.CONV(CONV), .OFFSET(112)) score_inst_5 (
         .clk(clk),
         .rst(~rst_n),
         .num(score[19:16]),
